@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\Request;    
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
@@ -34,9 +34,11 @@ class AuthController extends Controller
                 'phone' => $request->phone,
             ]);
 
-            return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json(['message' => 'Usuario registrado exitosamente', 'user' => $user, 'token' => $token], 201);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Registration failed', 'message' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Registro fallido', 'message' => $e->getMessage()], 500);
         }
     }
 
@@ -55,14 +57,14 @@ class AuthController extends Controller
             $user = User::where('email', $request->email)->first();
 
             if (!$user || !Hash::check($request->password, $user->password)) {
-                return response()->json(['error' => 'Invalid credentials'], 401);
+                return response()->json(['error' => 'Intenta nuevamente.'], 401);
             }
 
             $token = $user->createToken('auth_token')->plainTextToken;
 
-            return response()->json(['message' => 'Login successful', 'user' => $user, 'token' => $token], 200);
+            return response()->json(['message' => 'Inicio de sesión exitoso', 'user' => $user, 'token' => $token], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Login failed', 'message' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Error de inicio de sesión', 'message' => $e->getMessage()], 500);
         }
     }
 }
