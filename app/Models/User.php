@@ -15,17 +15,36 @@ class User extends Authenticatable
     const Instructor = 2;
     const Student = 3;
 
+    const Fisica = 4;
+    const Moral = 5;
+
     protected $fillable = [
         'name',
+        'last_name',
         'email',
         'password',
         'type_user',
-        'last_name',
         'phone',
+        'type_person',
+        'birth_date',
+        'curp',
+        'rfc',
+        'razon_social',
+        'representante_legal',
+        'domicilio_fiscal',
     ];
+
+    public function imageProfile()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
 
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    protected $casts = [
+        'birth_date' => 'date',
     ];
 }

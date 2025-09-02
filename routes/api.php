@@ -8,8 +8,17 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::get('/users/fisicas', [UsersController::class, 'indexFisicas']);
+Route::post('/store/fisicas', [UsersController::class, 'storeFisica']);
+Route::post('/update/fisicas/{id}', [UsersController::class, 'updateFisica']);
+
+Route::get('/users/morales', [UsersController::class, 'indexMorales']);
+Route::post('/store/morales', [UsersController::class, 'storeMorales']);
+Route::post('/update/morales/{id}', [UsersController::class, 'updateMorales']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('/users', UsersController::class);
+    Route::get('/me', [AuthController::class, 'me']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
