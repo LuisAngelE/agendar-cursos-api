@@ -34,11 +34,6 @@ class User extends Authenticatable
         'domicilio_fiscal',
     ];
 
-    public function imageProfile()
-    {
-        return $this->morphOne(Image::class, 'imageable');
-    }
-
     protected $hidden = [
         'password',
         'remember_token',
@@ -47,4 +42,22 @@ class User extends Authenticatable
     protected $casts = [
         'birth_date' => 'date',
     ];
+
+    // Relación polimórfica uno a uno con Image: un usuario puede tener una imagen de perfil
+    public function imageProfile()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
+    // Relación uno a muchos con Course: un instructor puede tener muchos cursos
+    public function courses()
+    {
+        return $this->hasMany(Course::class, 'instructor_id');
+    }
+
+    // Relación uno a muchos con Reservation: un estudiante puede tener muchas reservas
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class, 'student_id');
+    }
 }

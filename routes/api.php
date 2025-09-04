@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,6 +19,8 @@ Route::post('/update/morales/{id}', [UsersController::class, 'updateMorales']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('/users', UsersController::class);
+    Route::resource('/course', CourseController::class);
+    
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/resetPassword', [AuthController::class, 'resetPassword']);
     Route::post('/updateProfile', [AuthController::class, 'updateProfile']);
