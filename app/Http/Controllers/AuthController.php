@@ -252,9 +252,9 @@ class AuthController extends Controller
 
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images'), $filename);
+            $file->move(public_path('images/profile'), $filename);
 
-            $url = asset('images/' . $filename);
+            $url = asset('images/profile/' . $filename);
 
             if ($user->imageProfile) {
                 $oldImage = public_path(parse_url($user->imageProfile->url, PHP_URL_PATH));

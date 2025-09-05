@@ -34,4 +34,10 @@ class Course extends Model
     {
         return $this->hasMany(Reservation::class);
     }
+
+    // Relación polimórfica uno a muchos con Image: un curso puede tener muchas imágenes
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imageable');
+    }
 }

@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
 {
@@ -57,7 +58,7 @@ class CourseController extends Controller
 
             return response()->json(['mensaje' => 'Curso creado correctamente', 'curso' => $course], 201);
         } catch (ValidationException $e) {
-            return response()->json(['error' => 'Error de validación', 'mensajes' => $e->errors()], 422);
+            return response()->json(['error' => 'Error de validación', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al crear el curso', 'mensaje' => $e->getMessage()], 500);
         }
@@ -91,7 +92,7 @@ class CourseController extends Controller
 
             return response()->json(['mensaje' => 'Curso actualizado correctamente', 'curso' => $course], 200);
         } catch (ValidationException $e) {
-            return response()->json(['error' => 'Error de validación', 'mensajes' => $e->errors()], 422);
+            return response()->json(['error' => 'Error de validación', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al actualizar el curso', 'mensaje' => $e->getMessage()], 500);
         }
@@ -107,6 +108,53 @@ class CourseController extends Controller
             return response()->json(['mensaje' => 'Curso eliminado correctamente'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al eliminar el curso', 'mensaje' => $e->getMessage()], 500);
+        }
+    }
+
+    public function CourseImage(Request $request, $id)
+    {
+        try {
+            $course = Course::findOrFail($id);
+
+            $validator = Validator::make($request->all(), [
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ], [
+                'image.required' => 'La imagen es obligatoria.',
+                'image.image' => 'El archivo debe ser una imagen.',
+                'image.mimes' => 'La imagen debe ser jpeg, png, jpg o gif.',
+                'image.max' => 'La imagen no debe pesar más de 2MB.',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/course'), $filename);
+
+            $url = asset('images/course/' . $filename);
+
+            if ($course->images) {
+                $oldImage = public_path(parse_url($course->images->url, PHP_URL_PATH));
+                if (file_exists($oldImage)) {
+                    @unlink($oldImage);
+                }
+
+                $course->images->update(['url' => $url]);
+            } else {
+                $course->images()->create(['url' => $url]);
+            }
+
+            return response()->json([
+                'message' => 'Imagen subida correctamente',
+                'image' => ['url' => $url]
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al subir la imagen',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 }

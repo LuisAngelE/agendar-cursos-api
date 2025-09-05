@@ -39,6 +39,16 @@ class UsersController extends Controller
         ], 200);
     }
 
+    public function instructores()
+    {
+        $instructores = User::where('type_user', 2)->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $instructores,
+        ], 200);
+    }
+
     public function storeFisica(Request $request)
     {
         try {

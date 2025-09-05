@@ -17,14 +17,17 @@ Route::get('/users/morales', [UsersController::class, 'indexMorales']);
 Route::post('/store/morales', [UsersController::class, 'storeMorales']);
 Route::post('/update/morales/{id}', [UsersController::class, 'updateMorales']);
 
+Route::get('/instructores', [UsersController::class, 'instructores']);
+Route::resource('/users', UsersController::class);
+
 Route::middleware('auth:sanctum')->group(function () {
-    Route::resource('/users', UsersController::class);
+    Route::post('/courses/{id}/images', [CourseController::class, 'CourseImage']);
     Route::resource('/course', CourseController::class);
-    
-    Route::get('/me', [AuthController::class, 'me']);
+
+    Route::post('/profile/image/update', [AuthController::class, 'profileImageUpdate']);
     Route::post('/resetPassword', [AuthController::class, 'resetPassword']);
     Route::post('/updateProfile', [AuthController::class, 'updateProfile']);
-    Route::post('/profile/image/update', [AuthController::class, 'profileImageUpdate']);
+    Route::get('/me', [AuthController::class, 'me']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
