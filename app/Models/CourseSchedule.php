@@ -12,13 +12,8 @@ class CourseSchedule extends Model
     protected $fillable = [
         'course_id',
         'start_date',
-        'end_date',
-        'location',
-    ];
-
-    protected $casts = [
-        'start_date' => 'datetime',
-        'end_date' => 'datetime',
+        'start_time',
+        'end_time',
     ];
 
     // Relación inversa uno a muchos con Course: el horario pertenece a un curso
@@ -31,11 +26,5 @@ class CourseSchedule extends Model
     public function reservations()
     {
         return $this->hasMany(Reservation::class, 'schedule_id');
-    }
-
-    // Scope para filtrar horarios futuros
-    public function scopeUpcoming($query)
-    {
-        return $query->where('start_date', '>', now());
     }
 }

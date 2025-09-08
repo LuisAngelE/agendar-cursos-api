@@ -11,16 +11,24 @@ class Course extends Model
 
     protected $fillable = [
         'instructor_id',
+        'category_id',
         'title',
         'description',
         'modality',
-        'capacity',
+        'duration',
+        'syllabus_pdf',
     ];
 
     // Relación inversa uno a muchos con User: el curso pertenece a un instructor
     public function instructor()
     {
         return $this->belongsTo(User::class, 'instructor_id');
+    }
+
+    // Relación inversa uno a muchos con Category: el curso pertenece a una categoría
+    public function category()
+    {
+        return $this->belongsTo(categories::class, 'category_id');
     }
 
     // Relación uno a muchos con CourseSchedule: un curso puede tener muchos horarios

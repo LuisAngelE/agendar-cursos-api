@@ -14,7 +14,7 @@ class CourseController extends Controller
     public function index()
     {
         try {
-            $courses = Course::with('instructor', 'schedules', 'reservations')->get();
+            $courses = Course::with('instructor', 'category', 'schedules', 'reservations')->get();
             return response()->json($courses, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener los cursos', 'mensaje' => $e->getMessage()], 500);
@@ -25,7 +25,7 @@ class CourseController extends Controller
     public function show($id)
     {
         try {
-            $course = Course::with('instructor', 'schedules', 'reservations')->findOrFail($id);
+            $course = Course::with('instructor', 'category', 'schedules', 'reservations')->findOrFail($id);
             return response()->json($course, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Curso no encontrado', 'mensaje' => $e->getMessage()], 404);
@@ -37,21 +37,25 @@ class CourseController extends Controller
     {
         try {
             $validated = $request->validate([
-                'instructor_id' => 'required|exists:users,id',
+                'instructor_id' => 'nullable|exists:users,id',
+                'category_id' => 'required|exists:categories,id',
                 'title' => 'required|string|max:255',
                 'description' => 'required|string',
                 'modality' => 'required|string|max:50',
-                'capacity' => 'nullable|integer|min:1',
+                'duration' => 'required|string|max:100',
+                'syllabus_pdf' => 'nullable|string|max:255',
             ], [
-                'instructor_id.required' => 'El instructor es obligatorio',
                 'instructor_id.exists' => 'El instructor no existe',
+                'category_id.required' => 'La categoría es obligatoria',
+                'category_id.exists' => 'La categoría no existe',
                 'title.required' => 'El título es obligatorio',
                 'title.max' => 'El título no puede tener más de 255 caracteres',
-                'description.required' => 'La descripción  es obligatoria',
+                'description.required' => 'La descripción es obligatoria',
                 'modality.required' => 'La modalidad es obligatoria',
                 'modality.max' => 'La modalidad no puede tener más de 50 caracteres',
-                'capacity.integer' => 'La capacidad debe ser un número entero',
-                'capacity.min' => 'La capacidad debe ser al menos 1',
+                'duration.required' => 'La duración es obligatoria',
+                'duration.max' => 'La duración no puede tener más de 100 caracteres',
+                'syllabus_pdf.max' => 'El nombre del archivo PDF no puede tener más de 255 caracteres',
             ]);
 
             $course = Course::create($validated);
@@ -71,21 +75,25 @@ class CourseController extends Controller
             $course = Course::findOrFail($id);
 
             $validated = $request->validate([
-                'instructor_id' => 'sometimes|required|exists:users,id',
-                'title' => 'sometimes|required|string|max:255',
-                'description' => 'nullable|string',
-                'modality' => 'sometimes|required|string|max:50',
-                'capacity' => 'sometimes|required|integer|min:1',
+                'instructor_id' => 'nullable|exists:users,id',
+                'category_id' => 'required|exists:categories,id',
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'modality' => 'required|string|max:50',
+                'duration' => 'required|string|max:100',
+                'syllabus_pdf' => 'nullable|string|max:255',
             ], [
-                'instructor_id.required' => 'El instructor es obligatorio',
                 'instructor_id.exists' => 'El instructor no existe',
+                'category_id.required' => 'La categoría es obligatoria',
+                'category_id.exists' => 'La categoría no existe',
                 'title.required' => 'El título es obligatorio',
                 'title.max' => 'El título no puede tener más de 255 caracteres',
+                'description.required' => 'La descripción es obligatoria',
                 'modality.required' => 'La modalidad es obligatoria',
                 'modality.max' => 'La modalidad no puede tener más de 50 caracteres',
-                'capacity.required' => 'La capacidad es obligatoria',
-                'capacity.integer' => 'La capacidad debe ser un número entero',
-                'capacity.min' => 'La capacidad debe ser al menos 1',
+                'duration.required' => 'La duración es obligatoria',
+                'duration.max' => 'La duración no puede tener más de 100 caracteres',
+                'syllabus_pdf.max' => 'El nombre del archivo PDF no puede tener más de 255 caracteres',
             ]);
 
             $course->update($validated);

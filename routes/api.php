@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CourseScheduleController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,9 +23,11 @@ Route::get('/instructores', [UsersController::class, 'instructores']);
 Route::resource('/users', UsersController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/courses/{id}/images', [CourseController::class, 'CourseImage']);
+    Route::resource('/courseSchedule', CourseScheduleController::class);
+    Route::resource('/categories', CategoriesController::class);
     Route::resource('/course', CourseController::class);
 
+    Route::post('/courses/{id}/images', [CourseController::class, 'CourseImage']);
     Route::post('/profile/image/update', [AuthController::class, 'profileImageUpdate']);
     Route::post('/resetPassword', [AuthController::class, 'resetPassword']);
     Route::post('/updateProfile', [AuthController::class, 'updateProfile']);
