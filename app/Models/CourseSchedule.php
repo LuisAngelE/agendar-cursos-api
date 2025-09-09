@@ -14,6 +14,7 @@ class CourseSchedule extends Model
         'start_date',
         'start_time',
         'end_time',
+        'location',
     ];
 
     // Relación inversa uno a muchos con Course: el horario pertenece a un curso

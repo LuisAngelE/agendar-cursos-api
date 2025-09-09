@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseScheduleController;
+use App\Http\Controllers\ImageCourseController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,7 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('/categories', CategoriesController::class);
     Route::resource('/course', CourseController::class);
 
-    Route::post('/courses/{id}/images', [CourseController::class, 'CourseImage']);
+    Route::post('/courses/{id}/images', [ImageCourseController::class, 'courseImageUpload']);
     Route::post('/profile/image/update', [AuthController::class, 'profileImageUpdate']);
     Route::post('/resetPassword', [AuthController::class, 'resetPassword']);
     Route::post('/updateProfile', [AuthController::class, 'updateProfile']);

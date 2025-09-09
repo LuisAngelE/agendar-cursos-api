@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
 {
@@ -14,7 +12,14 @@ class CourseController extends Controller
     public function index()
     {
         try {
-            $courses = Course::with('instructor', 'category', 'schedules', 'reservations')->get();
+            $courses = Course::with('images', 'category', 'schedules', 'reservations')->get();
+
+            $courses = $courses->map(function ($course) {
+                $course->image = $course->images->first();
+                unset($course->images);
+                return $course;
+            });
+
             return response()->json($courses, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener los cursos', 'mensaje' => $e->getMessage()], 500);
@@ -25,7 +30,7 @@ class CourseController extends Controller
     public function show($id)
     {
         try {
-            $course = Course::with('instructor', 'category', 'schedules', 'reservations')->findOrFail($id);
+            $course = Course::with('images', 'category', 'schedules', 'reservations')->findOrFail($id);
             return response()->json($course, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Curso no encontrado', 'mensaje' => $e->getMessage()], 404);
@@ -116,53 +121,6 @@ class CourseController extends Controller
             return response()->json(['mensaje' => 'Curso eliminado correctamente'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al eliminar el curso', 'mensaje' => $e->getMessage()], 500);
-        }
-    }
-
-    public function CourseImage(Request $request, $id)
-    {
-        try {
-            $course = Course::findOrFail($id);
-
-            $validator = Validator::make($request->all(), [
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            ], [
-                'image.required' => 'La imagen es obligatoria.',
-                'image.image' => 'El archivo debe ser una imagen.',
-                'image.mimes' => 'La imagen debe ser jpeg, png, jpg o gif.',
-                'image.max' => 'La imagen no debe pesar más de 2MB.',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 422);
-            }
-
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images/course'), $filename);
-
-            $url = asset('images/course/' . $filename);
-
-            if ($course->images) {
-                $oldImage = public_path(parse_url($course->images->url, PHP_URL_PATH));
-                if (file_exists($oldImage)) {
-                    @unlink($oldImage);
-                }
-
-                $course->images->update(['url' => $url]);
-            } else {
-                $course->images()->create(['url' => $url]);
-            }
-
-            return response()->json([
-                'message' => 'Imagen subida correctamente',
-                'image' => ['url' => $url]
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Error al subir la imagen',
-                'message' => $e->getMessage()
-            ], 500);
         }
     }
 }

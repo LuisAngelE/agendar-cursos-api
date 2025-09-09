@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCourseSchedulesTable extends Migration
+class CreateImageCoursesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,15 @@ class CreateCourseSchedulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('course_schedules', function (Blueprint $table) {
+        Schema::create('image_courses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
-            $table->dateTime('start_date');
-            $table->time('start_time')->nullable();
-            $table->time('end_time')->nullable();
-            $table->string('location')->nullable();
+            $table->string('url', 255);
+            $table->string('type', 50)->nullable();
             $table->timestamps();
         });
     }
-
+    
     /**
      * Reverse the migrations.
      *
@@ -31,6 +29,6 @@ class CreateCourseSchedulesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('course_schedules');
+        Schema::dropIfExists('image_courses');
     }
 }
