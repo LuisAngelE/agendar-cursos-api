@@ -11,6 +11,35 @@ use Carbon\Carbon;
 
 class CourseScheduleController extends Controller
 {
+    public function index()
+    {
+        try {
+            $schedule = CourseSchedule::with('course', 'course.instructor', 'reservations', 'reservations.student')->latest()->get();
+            return response()->json($schedule, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener los cursos', 'mensaje' => $e->getMessage()], 500);
+        }
+    }
+
+    public function indexTypeUser($id)
+    {
+        try {
+            $schedule = CourseSchedule::with('course', 'course.instructor', 'reservations', 'reservations.student')
+                ->whereHas('course', function ($query) use ($id) {
+                    $query->where('instructor_id', $id);
+                })
+                ->orWhereHas('reservations', function ($query) use ($id) {
+                    $query->where('student_id', $id);
+                })
+                ->latest()
+                ->get();
+
+            return response()->json($schedule, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener los cursos', 'mensaje' => $e->getMessage()], 500);
+        }
+    }
+
     public function store(Request $request)
     {
         try {
@@ -34,6 +63,17 @@ class CourseScheduleController extends Controller
             ]);
 
             $date = Carbon::parse($validated['start_date']);
+
+            $existingSchedule = CourseSchedule::where('course_id', $validated['course_id'])
+                ->whereDate('start_date', $date->toDateString())
+                ->first();
+
+            if ($existingSchedule) {
+                return response()->json([
+                    'success' => false,
+                    'error'   => 'Ya existe un horario registrado para este curso en esta fecha.',
+                ], 422);
+            }
 
             if ($date->isWeekend()) {
                 return response()->json([
@@ -60,7 +100,7 @@ class CourseScheduleController extends Controller
 
             return response()->json([
                 'success'     => true,
-                'message'     => 'Horario y reserva creados correctamente.',
+                'mensaje'     => 'Horario y reserva creados correctamente.',
                 'schedule'    => $schedule,
                 'reservation' => $reservation->load(['student', 'course', 'schedule']),
             ], 201);
@@ -74,7 +114,7 @@ class CourseScheduleController extends Controller
             return response()->json([
                 'success' => false,
                 'error'   => 'Error al crear el horario y reserva.',
-                'message' => $e->getMessage(),
+                'mensaje' => $e->getMessage(),
             ], 500);
         }
     }

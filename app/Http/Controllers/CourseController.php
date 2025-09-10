@@ -9,10 +9,21 @@ use Illuminate\Validation\ValidationException;
 class CourseController extends Controller
 {
     // Listar todos los cursos
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $courses = Course::with('images', 'category', 'schedules', 'reservations')->get();
+            $query = Course::with('images', 'category', 'schedules', 'reservations');
+
+            if ($request->has('nombre') && !empty($request->nombre)) {
+                $search = $request->nombre;
+                $query->where('title', 'LIKE', "%{$search}%");
+            }
+
+            if ($request->has('category_id') && !empty($request->category_id)) {
+                $query->where('category_id', $request->category_id);
+            }
+
+            $courses = $query->get();
 
             $courses = $courses->map(function ($course) {
                 $course->image = $course->images->first();

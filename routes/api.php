@@ -24,9 +24,12 @@ Route::get('/instructores', [UsersController::class, 'instructores']);
 Route::resource('/users', UsersController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::resource('/courseSchedule', CourseScheduleController::class);
     Route::resource('/categories', CategoriesController::class);
     Route::resource('/course', CourseController::class);
+
+    Route::get('/courseSchedule', [CourseScheduleController::class, 'index']);
+    Route::get('/courseSchedule/{id}', [CourseScheduleController::class, 'indexTypeUser']);
+    Route::post('/courseSchedule', [CourseScheduleController::class, 'store']);
 
     Route::post('/courses/{id}/images', [ImageCourseController::class, 'courseImageUpload']);
     Route::post('/profile/image/update', [AuthController::class, 'profileImageUpdate']);
@@ -41,9 +44,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return response()->json([
         'id' => $user->id,
         'name' => $user->name,
+        'last_name' => $user->last_name,
         'email' => $user->email,
         'type_user' => $user->type_user,
-        'last_name' => $user->last_name,
         'phone' => $user->phone_number,
+        'type_person' => $user->type_person,
     ]);
 });
