@@ -25,21 +25,28 @@ Route::get('/instructores', [UsersController::class, 'instructores']);
 Route::resource('/users', UsersController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
+    //Categorías
     Route::resource('/categories', CategoriesController::class);
+
+    //Cursos
     Route::resource('/course', CourseController::class);
+    Route::get('/indexTypeUserCourse/{id}', [CourseController::class, 'indexTypeUserCourse']);
+    Route::post('/courses/{id}/images', [ImageCourseController::class, 'courseImageUpload']);
 
-    Route::get('/courseSchedule', [CourseScheduleController::class, 'index']);
-    Route::get('/courseSchedule/{id}', [CourseScheduleController::class, 'indexTypeUser']);
-    Route::post('/courseSchedule', [CourseScheduleController::class, 'store']);
-
+    //Agendación Fecha
     Route::post('/courses/{courseId}/assign-instructor', [CourseScheduleController::class, 'assignInstructor']);
+    Route::get('/indexTypeUserAgenda/{id}', [CourseScheduleController::class, 'indexTypeUserAgenda']);
+    Route::post('/courseSchedule/{id}/edit', [CourseScheduleController::class, 'update']);
+    Route::resource('/courseSchedule', CourseScheduleController::class);
+
+    //Status Reservas
     Route::post('/reservations/{reservationId}/confirm', [ReservationControlller::class, 'confirmReservation']);
     Route::post('/reservations/{reservationId}/cancel', [ReservationControlller::class, 'cancelReservation']);
 
-    Route::post('/courses/{id}/images', [ImageCourseController::class, 'courseImageUpload']);
+    //Peril de Usuario
     Route::post('/profile/image/update', [AuthController::class, 'profileImageUpdate']);
-    Route::post('/resetPassword', [AuthController::class, 'resetPassword']);
     Route::post('/updateProfile', [AuthController::class, 'updateProfile']);
+    Route::post('/resetPassword', [AuthController::class, 'resetPassword']);
     Route::get('/me', [AuthController::class, 'me']);
 });
 

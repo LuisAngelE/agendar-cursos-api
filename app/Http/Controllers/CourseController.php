@@ -37,6 +37,39 @@ class CourseController extends Controller
         }
     }
 
+    // Listar cursos asociados a un instructor
+    public function indexTypeUserCourse(Request $request, $id)
+    {
+        try {
+            $query = Course::with('images', 'category', 'schedules', 'reservations')
+                ->whereHas('schedules', function ($q) use ($id) {
+                    $q->where('instructor_id', $id);
+                });
+
+            if ($request->has('nombre') && !empty($request->nombre)) {
+                $search = $request->nombre;
+                $query->where('title', 'LIKE', "%{$search}%");
+            }
+
+            if ($request->has('category_id') && !empty($request->category_id)) {
+                $query->where('category_id', $request->category_id);
+            }
+
+            $courses = $query->get()->map(function ($course) {
+                $course->image = $course->images->first();
+                unset($course->images);
+                return $course;
+            });
+
+            return response()->json($courses, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error'   => 'Error al obtener los cursos',
+                'mensaje' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     // Mostrar un curso específico
     public function show($id)
     {
