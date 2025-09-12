@@ -2,83 +2,72 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 
 class ReservationControlller extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function confirmReservation($reservationId)
     {
-        //
+        try {
+            $reservation = Reservation::find($reservationId);
+
+            if (!$reservation) {
+                return response()->json([
+                    'error' => 'La reserva no existe.',
+                ], 404);
+            }
+
+            if ($reservation->status !== Reservation::STATUS_PENDING) {
+                return response()->json([
+                    'error' => 'Solo se pueden confirmar reservas con estado pendiente.',
+                ], 400);
+            }
+
+            $reservation->status = Reservation::STATUS_CONFIRMED;
+            $reservation->save();
+
+            return response()->json([
+                'mensaje' => 'Reserva confirmada correctamente.',
+                'reserva' => $reservation,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al confirmar la reserva.',
+                'mensaje' => $e->getMessage(),
+            ], 500);
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function cancelReservation($reservationId)
     {
-        //
-    }
+        try {
+            $reservation = Reservation::find($reservationId);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+            if (!$reservation) {
+                return response()->json([
+                    'error' => 'La reserva no existe.',
+                ], 404);
+            }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+            if ($reservation->status !== Reservation::STATUS_CONFIRMED) {
+                return response()->json([
+                    'error' => 'Solo se pueden cancelar reservas con estado confirmado.',
+                ], 400);
+            }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+            $reservation->status = Reservation::STATUS_CANCELED;
+            $reservation->save();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+            return response()->json([
+                'mensaje' => 'Reserva cancelada correctamente.',
+                'reserva' => $reservation,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al cancelar la reserva.',
+                'mensaje' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

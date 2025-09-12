@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseScheduleController;
 use App\Http\Controllers\ImageCourseController;
+use App\Http\Controllers\ReservationControlller;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/courseSchedule', [CourseScheduleController::class, 'index']);
     Route::get('/courseSchedule/{id}', [CourseScheduleController::class, 'indexTypeUser']);
     Route::post('/courseSchedule', [CourseScheduleController::class, 'store']);
+
+    Route::post('/courses/{courseId}/assign-instructor', [CourseScheduleController::class, 'assignInstructor']);
+    Route::post('/reservations/{reservationId}/confirm', [ReservationControlller::class, 'confirmReservation']);
+    Route::post('/reservations/{reservationId}/cancel', [ReservationControlller::class, 'cancelReservation']);
 
     Route::post('/courses/{id}/images', [ImageCourseController::class, 'courseImageUpload']);
     Route::post('/profile/image/update', [AuthController::class, 'profileImageUpdate']);

@@ -11,6 +11,7 @@ class CourseSchedule extends Model
 
     protected $fillable = [
         'course_id',
+        'instructor_id',
         'start_date',
         'start_time',
         'end_time',
@@ -21,6 +22,11 @@ class CourseSchedule extends Model
     public function course()
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function instructor()
+    {
+        return $this->belongsTo(User::class, 'instructor_id');
     }
 
     // Relación uno a muchos con Reservation: un horario puede tener muchas reservas

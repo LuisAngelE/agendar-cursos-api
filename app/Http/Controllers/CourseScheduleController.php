@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\CourseSchedule;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class CourseScheduleController extends Controller
     public function index()
     {
         try {
-            $schedule = CourseSchedule::with('course', 'course.instructor', 'reservations', 'reservations.student')->latest()->get();
+            $schedule = CourseSchedule::with('course', 'instructor', 'reservations', 'reservations.student')->get();
             return response()->json($schedule, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener los cursos', 'mensaje' => $e->getMessage()], 500);
@@ -24,14 +25,13 @@ class CourseScheduleController extends Controller
     public function indexTypeUser($id)
     {
         try {
-            $schedule = CourseSchedule::with('course', 'course.instructor', 'reservations', 'reservations.student')
+            $schedule = CourseSchedule::with('course', 'instructor', 'reservations', 'reservations.student')
                 ->whereHas('course', function ($query) use ($id) {
                     $query->where('instructor_id', $id);
                 })
                 ->orWhereHas('reservations', function ($query) use ($id) {
                     $query->where('student_id', $id);
                 })
-                ->latest()
                 ->get();
 
             return response()->json($schedule, 200);
@@ -114,6 +114,41 @@ class CourseScheduleController extends Controller
             return response()->json([
                 'success' => false,
                 'error'   => 'Error al crear el horario y reserva.',
+                'mensaje' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function assignInstructor(Request $request, $courseId)
+    {
+        try {
+            $validated = $request->validate([
+                'instructor_id' => 'required|exists:users,id',
+            ], [
+                'instructor_id.required' => 'El ID del instructor es obligatorio.',
+                'instructor_id.exists' => 'El instructor no existe.',
+            ]);
+
+            $schedule = CourseSchedule::where('course_id', $courseId)->first();
+            if (!$schedule) {
+                return response()->json(['error' => 'No hay horarios para este curso.'], 404);
+            }
+
+            $schedule->instructor_id = $validated['instructor_id'];
+            $schedule->save();
+
+            return response()->json([
+                'mensaje' => 'Instructor asignado correctamente al curso.',
+                'curso' => $schedule,
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'error' => 'Error de validación',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al asignar el instructor al curso',
                 'mensaje' => $e->getMessage(),
             ], 500);
         }

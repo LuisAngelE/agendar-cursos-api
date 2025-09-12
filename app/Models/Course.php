@@ -10,7 +10,6 @@ class Course extends Model
     use HasFactory;
 
     protected $fillable = [
-        'instructor_id',
         'category_id',
         'title',
         'description',
@@ -19,13 +18,7 @@ class Course extends Model
         'syllabus_pdf',
     ];
 
-    // Relación inversa uno a muchos con User: el curso pertenece a un instructor
-    public function instructor()
-    {
-        return $this->belongsTo(User::class, 'instructor_id');
-    }
-
-    // Relación inversa uno a muchos con Category: el curso pertenece a una categoría
+    // Relación uno a muchos con Category: un curso pertenece a una categoría
     public function category()
     {
         return $this->belongsTo(categories::class, 'category_id');
@@ -43,7 +36,7 @@ class Course extends Model
         return $this->hasMany(Reservation::class);
     }
 
-    // Relación: un curso tiene muchas imágenes
+    // Relación uno a muchos con ImageCourse: un curso tiene muchas imágenes
     public function images()
     {
         return $this->hasMany(ImageCourse::class);

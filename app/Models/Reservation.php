@@ -11,8 +11,8 @@ class Reservation extends Model
 
     const STATUS_PENDING = 1;
     const STATUS_CONFIRMED = 2;
-    const STATUS_SERVED = 3;
-    const STATUS_CANCELED = 4;
+    const STATUS_CANCELED = 3;
+    const STATUS_SERVED = 4;
 
     protected $fillable = [
         'student_id',
