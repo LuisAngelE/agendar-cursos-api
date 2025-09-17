@@ -42,8 +42,11 @@ Route::middleware('auth:sanctum')->group(function () {
     //Status Reservas
     Route::post('/reservations/{reservationId}/confirm', [ReservationControlller::class, 'confirmReservation']);
     Route::post('/reservations/{reservationId}/cancel', [ReservationControlller::class, 'cancelReservation']);
+    Route::post('/reservations/{reservationId}/served', [ReservationControlller::class, 'servedReservation']);
+    Route::post('/reservations/{reservationId}/reschedule', [ReservationControlller::class, 'rescheduleReservation']);
 
-    //Peril de Usuario
+    //Auth Controller
+    Route::post('/forgotPassword', [AuthController::class, 'forgotPassword']);
     Route::post('/profile/image/update', [AuthController::class, 'profileImageUpdate']);
     Route::post('/updateProfile', [AuthController::class, 'updateProfile']);
     Route::post('/resetPassword', [AuthController::class, 'resetPassword']);

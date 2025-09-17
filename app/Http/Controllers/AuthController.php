@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use App\Mail\Contraseña;
 
 class AuthController extends Controller
 {
@@ -252,14 +255,14 @@ class AuthController extends Controller
 
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images/profile'), $filename);
+            $path = $file->storeAs('profile', $filename, 'public');
 
-            $url = asset('images/profile/' . $filename);
+            $url = asset('storage/' . $path);
 
             if ($user->imageProfile) {
-                $oldImage = public_path(parse_url($user->imageProfile->url, PHP_URL_PATH));
-                if (file_exists($oldImage)) {
-                    @unlink($oldImage);
+                $oldPath = str_replace(asset('storage') . '/', '', $user->imageProfile->url);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
                 }
 
                 $user->imageProfile->update(['url' => $url]);
@@ -269,7 +272,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'message' => 'Imagen de perfil actualizada correctamente',
-                'image' => ['url' => $url]
+                'image'   => ['url' => $url],
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -277,5 +280,45 @@ class AuthController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $validator = Validator::make($request->only(['email']), [
+            'email' => 'required|email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()->all()
+            ], 400);
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'error' => 'El correo electrónico no está registrado en el sistema.'
+            ], 404);
+        }
+
+        $randomPassword = Str::random(8);
+        $user->password = Hash::make($randomPassword);
+        $user->save();
+
+        $url = 'Hola';
+
+        try {
+            Mail::to($user->email)->send(new Contraseña($randomPassword, $user, $url));
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'No se pudo enviar el correo',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+
+        return response()->json([
+            'message' => 'Se ha enviado un correo electrónico con la contraseña generada.'
+        ], 200);
     }
 }
