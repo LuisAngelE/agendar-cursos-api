@@ -15,7 +15,7 @@ class CreateCourseSchedulesTable extends Migration
     {
         Schema::create('course_schedules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('instructor_id')->constrained('users')->onDelete('cascade')->nullable();
+            $table->foreignId('instructor_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
             $table->dateTime('start_date');
             $table->time('start_time')->nullable();

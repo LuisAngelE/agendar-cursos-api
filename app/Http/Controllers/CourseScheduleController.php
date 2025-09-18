@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Instructor;
+use App\Mail\InstructorCliente;
+use App\Mail\NuevoHorario;
 use App\Models\Course;
 use App\Models\CourseSchedule;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 
 class CourseScheduleController extends Controller
@@ -108,6 +112,13 @@ class CourseScheduleController extends Controller
                 'schedule_id' => $schedule->id,
                 'status'      => Reservation::STATUS_PENDING,
             ]);
+
+            $url = url('http://localhost:3000/Agenda');
+
+            $courseOwner = $schedule->course->user;
+            if ($courseOwner && $courseOwner->email) {
+                Mail::to($courseOwner->email)->send(new NuevoHorario($schedule, $reservation, $url));
+            }
 
             return response()->json([
                 'success'     => true,
@@ -221,7 +232,7 @@ class CourseScheduleController extends Controller
                 'instructor_id.exists' => 'El instructor no existe.',
             ]);
 
-            $schedule = CourseSchedule::find($scheduleId);
+            $schedule = CourseSchedule::with('reservations.student', 'course')->findOrFail($scheduleId);
             if (!$schedule) {
                 return response()->json(['error' => 'No existe ese horario con ese id.'], 404);
             }
@@ -229,8 +240,22 @@ class CourseScheduleController extends Controller
             $schedule->instructor_id = $validated['instructor_id'];
             $schedule->save();
 
+            $reservation = $schedule->reservations->first();
+            $url = url('http://localhost:3000/Agenda');
+
+            // Enviar correo al instructor
+            $instructor = $schedule->instructor;
+            if ($instructor && $instructor->email) {
+                Mail::to($instructor->email)->send(new Instructor($schedule, $reservation, $url));
+            }
+
+            // Enviar correo al cliente (student)
+            if ($reservation && $reservation->student && $reservation->student->email) {
+                Mail::to($reservation->student->email)->send(new InstructorCliente($schedule, $reservation, $url));
+            }
+
             return response()->json([
-                'mensaje' => 'Instructor asignado correctamente a la agendación.',
+                'mensaje' => 'Instructor asignado y notificaciones enviadas correctamente.',
                 'schedule' => $schedule,
             ], 200);
         } catch (ValidationException $e) {

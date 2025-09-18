@@ -24,62 +24,62 @@
                     </tr>
 
                     <tr>
-                        <td style="padding:20px; font-size:15px; line-height:1.6;">
-
+                        <td style="padding:20px;">
                             <h2
                                 style="font-size:20px; margin:0 0 15px 0; color:#333; font-weight:normal; line-height:1.4;">
                                 Buen día estimado(a): <br>
                                 <span style="color:#F05E29; font-weight:bold;">
-                                    {{ $user->name }} {{ $user->last_name }}
+                                    {{ $schedule->course->user->razon_social ?? $schedule->course->user->name . ' ' . $schedule->course->user->last_name }}
                                 </span>
                             </h2>
 
-                            <p style="margin:0 0 15px 0;">
-                                Hemos generado con éxito tu nueva contraseña para acceder a tu cuenta en nuestra
-                                plataforma de
-                                <span style="color:#F05E29; font-weight:bold;">Cursos</span>.
-                                Esta contraseña es única y temporal, te recomendamos cambiarla tan pronto como inicies
-                                sesión.
+                            <p style="font-size:15px; line-height:1.6; margin:0 0 15px 0;">
+                                Se ha registrado un nuevo horario en el siguiente curso:
                             </p>
 
-                            <p style="margin:0 0 15px 0;">
-                                Puedes acceder a tu cuenta utilizando tu correo electrónico y la nueva contraseña
-                                proporcionada a continuación:
-                            </p>
-
-                            <table role="presentation" cellspacing="0" cellpadding="8" border="0" width="100%"
-                                style="font-size:14px; margin-bottom:20px; background:#f9f9f9; border-radius:6px;">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+                                style="font-size:14px; margin-bottom:20px;">
                                 <tr>
-                                    <td style="font-weight:bold;">Correo Electrónico:</td>
-                                    <td style="color:#F05E29;">{{ $user->email }}</td>
+                                    <td style="padding:5px 0;"><strong>Curso:</strong></td>
+                                    <td>{{ $schedule->course->title }}</td>
                                 </tr>
                                 <tr>
-                                    <td style="font-weight:bold;">Contraseña:</td>
-                                    <td style="color:#F05E29;">{{ $randomPassword }}</td>
+                                    <td style="padding:5px 0;"><strong>Fecha Solicitada:</strong></td>
+                                    <td>{{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m/Y H:i') }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:5px 0;"><strong>Locación:</strong></td>
+                                    <td>{{ $schedule->location }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:5px 0;"><strong>Solicitante:</strong></td>
+                                    <td>{{ $reservation->student->name ?? 'Usuario' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:5px 0;"><strong>Status:</strong></td>
+                                    <td>
+                                        @php
+                                            $statuses = [
+                                                1 => 'Pendiente',
+                                                2 => 'Confirmada',
+                                                3 => 'Cancelada',
+                                                4 => 'Atendida',
+                                            ];
+                                        @endphp
+                                        {{ $statuses[$reservation->status] ?? 'Desconocido' }}
+                                    </td>
                                 </tr>
                             </table>
 
-                            <div style="text-align:center; margin:20px 0;">
+                            <div style="text-align:center;">
                                 <a href="{{ $url }}"
                                     style="display:inline-block; background:#F05E29; color:#ffffff;
                                           font-size:16px; font-weight:bold;
                                           text-decoration:none; padding:14px 28px;
                                           border-radius:6px;">
-                                    Iniciar Sesión
+                                    Mis Cursos Agendados
                                 </a>
                             </div>
-
-                            <p style="margin:0 0 15px 0;">
-                                Recuerda que tu seguridad es nuestra prioridad. No compartas tu contraseña con nadie.
-                                Si experimentas algún problema al iniciar sesión, estamos aquí para ayudarte.
-                                Ponte en contacto con nuestro equipo de soporte.
-                            </p>
-
-                            <p style="margin:0 0 15px 0;">
-                                Si no realizaste esta solicitud o tienes alguna pregunta, por favor, contáctanos de
-                                inmediato.
-                            </p>
-
                         </td>
                     </tr>
 

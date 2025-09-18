@@ -10,6 +10,7 @@ use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::post('/forgotPassword', [AuthController::class, 'forgotPassword']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -46,7 +47,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/reservations/{reservationId}/reschedule', [ReservationControlller::class, 'rescheduleReservation']);
 
     //Auth Controller
-    Route::post('/forgotPassword', [AuthController::class, 'forgotPassword']);
     Route::post('/profile/image/update', [AuthController::class, 'profileImageUpdate']);
     Route::post('/updateProfile', [AuthController::class, 'updateProfile']);
     Route::post('/resetPassword', [AuthController::class, 'resetPassword']);

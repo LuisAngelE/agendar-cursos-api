@@ -284,41 +284,53 @@ class AuthController extends Controller
 
     public function forgotPassword(Request $request)
     {
-        $validator = Validator::make($request->only(['email']), [
-            'email' => 'required|email',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors()->all()
-            ], 400);
-        }
-
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user) {
-            return response()->json([
-                'error' => 'El correo electrónico no está registrado en el sistema.'
-            ], 404);
-        }
-
-        $randomPassword = Str::random(8);
-        $user->password = Hash::make($randomPassword);
-        $user->save();
-
-        $url = 'Hola';
-
         try {
-            Mail::to($user->email)->send(new Contraseña($randomPassword, $user, $url));
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|string|email',
+            ], [
+                'email.required' => 'El correo electrónico es obligatorio.',
+                'email.email' => 'El correo electrónico debe ser una dirección válida.',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user) {
+                return response()->json([
+                    'error' => 'El correo electrónico no está registrado en el sistema.'
+                ], 404);
+            }
+
+            $randomPassword = Str::random(8);
+            $user->password = Hash::make($randomPassword);
+            $user->save();
+
+            $url = url('http://localhost:3000/iniciar-sesion');
+
+            if ($request->has('preview') && $request->preview == true) {
+                return view('mail.contraseña', compact('randomPassword', 'user', 'url'));
+            }
+
+            try {
+                Mail::to($user->email)->send(new Contraseña($randomPassword, $user, $url));
+            } catch (\Exception $e) {
+                return response()->json([
+                    'error' => 'No se pudo enviar el correo',
+                    'message' => $e->getMessage()
+                ], 500);
+            }
+
+            return response()->json([
+                'message' => 'Se ha enviado un correo electrónico con la nueva contraseña.',
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'No se pudo enviar el correo',
+                'error' => 'Error en el proceso de recuperación de contraseña',
                 'message' => $e->getMessage()
             ], 500);
         }
-
-        return response()->json([
-            'message' => 'Se ha enviado un correo electrónico con la contraseña generada.'
-        ], 200);
     }
 }

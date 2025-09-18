@@ -12,7 +12,7 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Course::with('images', 'category', 'schedules', 'reservations');
+            $query = Course::with('user', 'category', 'images', 'schedules', 'reservations');
 
             if ($request->has('nombre') && !empty($request->nombre)) {
                 $search = $request->nombre;
@@ -41,7 +41,7 @@ class CourseController extends Controller
     public function indexTypeUserCourse(Request $request, $id)
     {
         try {
-            $query = Course::with('images', 'category', 'schedules', 'reservations')
+            $query = Course::with('user', 'category', 'images', 'schedules', 'reservations')
                 ->whereHas('schedules', function ($q) use ($id) {
                     $q->where('instructor_id', $id);
                 });
@@ -74,7 +74,7 @@ class CourseController extends Controller
     public function show($id)
     {
         try {
-            $course = Course::with('images', 'category', 'schedules', 'reservations')->findOrFail($id);
+            $course = Course::with('user', 'category', 'images', 'schedules', 'reservations')->findOrFail($id);
             return response()->json($course, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Curso no encontrado', 'mensaje' => $e->getMessage()], 404);
@@ -106,6 +106,8 @@ class CourseController extends Controller
                 'duration.max' => 'La duración no puede tener más de 100 caracteres',
                 'syllabus_pdf.max' => 'El nombre del archivo PDF no puede tener más de 255 caracteres',
             ]);
+
+            $validated['user_id'] = auth()->id();
 
             $course = Course::create($validated);
 

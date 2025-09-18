@@ -6,25 +6,25 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class Contraseña extends Mailable
+class NuevoHorario extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $randomPassword;
-    public $user;
+    public $schedule;
+    public $reservation;
     public $url;
 
-    public function __construct($randomPassword, $user, $url)
+    public function __construct($schedule, $reservation, $url)
     {
-        $this->randomPassword = $randomPassword;
-        $this->user = $user;
+        $this->schedule = $schedule;
+        $this->reservation = $reservation;
         $this->url = $url;
     }
 
     public function build()
     {
         return $this->from('notificacion@ldrsolutions.com.mx', 'LDR Solutons, Foton')
-            ->subject('Contraseña de tu cuenta')
-            ->view('mail.contraseña');
+            ->subject('Tienes un Curso Agendado')
+            ->view('mail.nuevohorario');
     }
 }

@@ -52,7 +52,7 @@ class User extends Authenticatable
     // Relación uno a muchos con Course: un instructor puede tener muchos cursos
     public function courses()
     {
-        return $this->hasMany(Course::class, 'instructor_id');
+        return $this->hasMany(Course::class, 'instructor_id', 'user_id');
     }
 
     // Relación uno a muchos con Reservation: un estudiante puede tener muchas reservas
