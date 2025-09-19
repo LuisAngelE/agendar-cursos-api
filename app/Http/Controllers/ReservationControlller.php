@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CancelReservation;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use App\Mail\ConfirmReservation;
+use App\Mail\RescheduleReservation;
+use Illuminate\Support\Facades\Mail;
 
 class ReservationControlller extends Controller
 {
@@ -26,6 +30,13 @@ class ReservationControlller extends Controller
 
             $reservation->status = Reservation::STATUS_CONFIRMED;
             $reservation->save();
+
+            $url = url('http://localhost:3000/Agenda');
+
+            $schedule = $reservation->schedule;
+            if ($reservation->student && $reservation->student->email) {
+                Mail::to($reservation->student->email)->send(new ConfirmReservation($schedule, $reservation, $url));
+            }
 
             return response()->json([
                 'mensaje' => 'Reserva confirmada correctamente.',
@@ -58,6 +69,13 @@ class ReservationControlller extends Controller
 
             $reservation->status = Reservation::STATUS_CANCELED;
             $reservation->save();
+
+            $url = url('http://localhost:3000/Agenda');
+
+            $schedule = $reservation->schedule;
+            if ($reservation->student && $reservation->student->email) {
+                Mail::to($reservation->student->email)->send(new CancelReservation($schedule, $reservation, $url));
+            }
 
             return response()->json([
                 'mensaje' => 'Reserva cancelada correctamente.',
@@ -123,6 +141,13 @@ class ReservationControlller extends Controller
 
             $reservation->status = Reservation::STATUS_CONFIRMED;
             $reservation->save();
+
+            $url = url('http://localhost:3000/Agenda');
+
+            $schedule = $reservation->schedule;
+            if ($reservation->student && $reservation->student->email) {
+                Mail::to($reservation->student->email)->send(new RescheduleReservation($schedule, $reservation, $url));
+            }
 
             return response()->json([
                 'mensaje' => 'La reserva se reprogramó correctamente y ahora está confirmada.',

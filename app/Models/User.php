@@ -60,4 +60,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Reservation::class, 'student_id');
     }
+
+    public function favoriteCourses()
+    {
+        return $this->belongsToMany(Course::class, 'courses_users_favorites')
+            ->withTimestamps();
+    }
 }

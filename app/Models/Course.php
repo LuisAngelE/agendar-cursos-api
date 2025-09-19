@@ -48,4 +48,10 @@ class Course extends Model
     {
         return $this->hasMany(ImageCourse::class);
     }
+
+    public function usersWhoFavorited()
+    {
+        return $this->belongsToMany(User::class, 'courses_users_favorites')
+            ->withTimestamps();
+    }
 }

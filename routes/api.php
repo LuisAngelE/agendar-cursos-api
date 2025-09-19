@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseScheduleController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ImageCourseController;
 use App\Http\Controllers\ReservationControlller;
 use App\Http\Controllers\UsersController;
@@ -51,6 +52,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/updateProfile', [AuthController::class, 'updateProfile']);
     Route::post('/resetPassword', [AuthController::class, 'resetPassword']);
     Route::get('/me', [AuthController::class, 'me']);
+
+    Route::get('/favorites', [FavoriteController ::class, 'index']);
+    Route::post('/favorites', [FavoriteController::class, 'store']);
+    Route::delete('/favorites/{course}', [FavoriteController::class, 'destroy']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
