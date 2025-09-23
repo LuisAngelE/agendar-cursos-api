@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\HorarioActualizado;
 use App\Mail\Instructor;
 use App\Mail\InstructorCliente;
 use App\Mail\NuevoHorario;
@@ -19,7 +20,7 @@ class CourseScheduleController extends Controller
     public function index()
     {
         try {
-            $schedule = CourseSchedule::with('course', 'instructor', 'reservations', 'reservations.student')->get();
+            $schedule = CourseSchedule::with('course', 'instructor', 'reservations', 'reservations.student', 'state', 'municipality')->get();
             return response()->json($schedule, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener los cursos', 'mensaje' => $e->getMessage()], 500);
@@ -29,7 +30,7 @@ class CourseScheduleController extends Controller
     public function indexTypeUserAgenda($id)
     {
         try {
-            $schedule = CourseSchedule::with('course', 'instructor', 'reservations', 'reservations.student')
+            $schedule = CourseSchedule::with('course', 'instructor', 'reservations', 'reservations.student', 'state', 'municipality')
                 ->whereHas('course', function ($query) use ($id) {
                     $query->where('instructor_id', $id);
                 })
@@ -47,7 +48,7 @@ class CourseScheduleController extends Controller
     public function show($id)
     {
         try {
-            $schedule = CourseSchedule::with('course', 'instructor', 'reservations', 'reservations.student')->findOrFail($id);
+            $schedule = CourseSchedule::with('course', 'instructor', 'reservations', 'reservations.student', 'state', 'municipality')->findOrFail($id);
 
             return response()->json($schedule, 200);
         } catch (\Exception $e) {
@@ -59,41 +60,35 @@ class CourseScheduleController extends Controller
     {
         try {
             $validated = $request->validate([
-                'course_id'  => 'required|exists:courses,id',
-                'start_date' => 'required|date_format:Y-m-d H:i:s',
-                'location'   => 'required|string|max:255',
-                'start_time' => 'nullable|date_format:H:i',
-                'end_time'   => 'nullable|date_format:H:i|after:start_time',
+                'course_id'       => 'required|exists:courses,id',
+                'state_id'        => 'required|exists:states,id',
+                'municipality_id' => 'required|exists:municipalities,id',
+                'start_date'      => 'required|date_format:Y-m-d H:i:s',
+                'location'        => 'required|string|max:255',
             ], [
-                'course_id.required'     => 'El ID del curso es obligatorio.',
-                'course_id.exists'       => 'El curso seleccionado no existe.',
-                'start_date.required'    => 'La fecha de inicio es obligatoria.',
-                'start_date.date_format' => 'La fecha de inicio debe tener el formato AAAA-MM-DD HH:MM:SS.',
-                'location.required'      => 'La ubicación es obligatoria.',
-                'location.string'        => 'La ubicación debe ser una cadena de texto.',
-                'location.max'           => 'La ubicación no debe exceder los 255 caracteres.',
-                'start_time.date_format' => 'La hora de inicio debe tener el formato HH:MM.',
-                'end_time.date_format'   => 'La hora de fin debe tener el formato HH:MM.',
-                'end_time.after'         => 'La hora de fin debe ser posterior a la hora de inicio.',
+                'course_id.required'       => 'El ID del curso es obligatorio.',
+                'course_id.exists'         => 'El curso seleccionado no existe.',
+                'state_id.required'        => 'El estado es obligatorio.',
+                'state_id.exists'          => 'El estado seleccionado no existe.',
+                'municipality_id.required' => 'El municipio es obligatorio.',
+                'municipality_id.exists'   => 'El municipio seleccionado no existe.',
+                'start_date.required'      => 'La fecha de inicio es obligatoria.',
+                'start_date.date_format'   => 'La fecha de inicio debe tener el formato AAAA-MM-DD HH:MM:SS.',
+                'location.required'        => 'La ubicación es obligatoria.',
+                'location.string'          => 'La ubicación debe ser una cadena de texto.',
+                'location.max'             => 'La ubicación no debe exceder los 255 caracteres.',
             ]);
 
             $date = Carbon::parse($validated['start_date']);
 
-            $existingSchedule = CourseSchedule::where('course_id', $validated['course_id'])
+            $existingSchedulesCount  = CourseSchedule::where('course_id', $validated['course_id'])
                 ->whereDate('start_date', $date->toDateString())
-                ->first();
+                ->count();
 
-            if ($existingSchedule) {
+            if ($existingSchedulesCount >= 3) {
                 return response()->json([
                     'success' => false,
-                    'error'   => 'Ya existe un horario registrado para este curso en esta fecha.',
-                ], 422);
-            }
-
-            if ($date->isWeekend()) {
-                return response()->json([
-                    'success' => false,
-                    'error'   => 'Solo puedes agendar de lunes a viernes.'
+                    'error'   => 'Solo se pueden registrar hasta 3 horarios para este curso en la misma fecha.',
                 ], 422);
             }
 
@@ -130,7 +125,7 @@ class CourseScheduleController extends Controller
             return response()->json([
                 'success'  => false,
                 'error'    => 'Error de validación.',
-                'errors' => $e->errors(),
+                'errors'   => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
@@ -145,50 +140,44 @@ class CourseScheduleController extends Controller
     {
         try {
             $validated = $request->validate([
-                'course_id'  => 'required|exists:courses,id',
-                'start_date' => 'required|date_format:Y-m-d H:i:s',
-                'location'   => 'required|string|max:255',
-                'start_time' => 'nullable|date_format:H:i',
-                'end_time'   => 'nullable|date_format:H:i|after:start_time',
+                'course_id'       => 'required|exists:courses,id',
+                'state_id'        => 'required|exists:states,id',
+                'municipality_id' => 'required|exists:municipalities,id',
+                'start_date'      => 'required|date_format:Y-m-d H:i:s',
+                'location'        => 'required|string|max:255',
             ], [
-                'course_id.required'     => 'El ID del curso es obligatorio.',
-                'course_id.exists'       => 'El curso seleccionado no existe.',
-                'start_date.required'    => 'La fecha de inicio es obligatoria.',
-                'start_date.date_format' => 'La fecha de inicio debe tener el formato AAAA-MM-DD HH:MM:SS.',
-                'location.required'      => 'La ubicación es obligatoria.',
-                'location.string'        => 'La ubicación debe ser una cadena de texto.',
-                'location.max'           => 'La ubicación no debe exceder los 255 caracteres.',
-                'start_time.date_format' => 'La hora de inicio debe tener el formato HH:MM.',
-                'end_time.date_format'   => 'La hora de fin debe tener el formato HH:MM.',
-                'end_time.after'         => 'La hora de fin debe ser posterior a la hora de inicio.',
+                'course_id.required'       => 'El ID del curso es obligatorio.',
+                'course_id.exists'         => 'El curso seleccionado no existe.',
+                'state_id.required'        => 'El estado es obligatorio.',
+                'state_id.exists'          => 'El estado seleccionado no existe.',
+                'municipality_id.required' => 'El municipio es obligatorio.',
+                'municipality_id.exists'   => 'El municipio seleccionado no existe.',
+                'start_date.required'      => 'La fecha de inicio es obligatoria.',
+                'start_date.date_format'   => 'La fecha de inicio debe tener el formato AAAA-MM-DD HH:MM:SS.',
+                'location.required'        => 'La ubicación es obligatoria.',
+                'location.string'          => 'La ubicación debe ser una cadena de texto.',
+                'location.max'             => 'La ubicación no debe exceder los 255 caracteres.',
             ]);
 
             $schedule = CourseSchedule::findOrFail($id);
             $date = Carbon::parse($validated['start_date']);
 
-            $existingSchedule = CourseSchedule::where('course_id', $validated['course_id'])
+            $existingSchedulesCount = CourseSchedule::where('course_id', $validated['course_id'])
                 ->whereDate('start_date', $date->toDateString())
-                ->where('id', '!=', $id)
-                ->first();
+                ->where('id', '!=', $schedule->id)
+                ->count();
 
-            if ($existingSchedule) {
+            if ($existingSchedulesCount >= 3) {
                 return response()->json([
                     'success' => false,
-                    'error'   => 'Ya existe un horario registrado para este curso en esta fecha.',
-                ], 422);
-            }
-
-            if ($date->isWeekend()) {
-                return response()->json([
-                    'success' => false,
-                    'error'   => 'Solo puedes agendar de lunes a viernes.'
+                    'error'   => 'Solo se pueden registrar hasta 3 horarios para este curso en la misma fecha.',
                 ], 422);
             }
 
             if ($date->isPast()) {
                 return response()->json([
                     'success' => false,
-                    'error'   => 'No puedes agendar en una fecha pasada.'
+                    'error'   => 'No puedes actualizar a una fecha pasada.',
                 ], 422);
             }
 
@@ -199,6 +188,13 @@ class CourseScheduleController extends Controller
                 $reservation->update([
                     'course_id' => $validated['course_id'],
                 ]);
+            }
+
+            $url = url('http://localhost:3000/Agenda');
+
+            $courseOwner = $schedule->course->user;
+            if ($courseOwner && $courseOwner->email) {
+                Mail::to($courseOwner->email)->send(new HorarioActualizado($schedule, $reservation, $url));
             }
 
             return response()->json([

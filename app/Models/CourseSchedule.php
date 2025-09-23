@@ -10,11 +10,11 @@ class CourseSchedule extends Model
     use HasFactory;
 
     protected $fillable = [
-        'course_id',
         'instructor_id',
+        'course_id',
+        'state_id',
+        'municipality_id',
         'start_date',
-        'start_time',
-        'end_time',
         'location',
     ];
 
@@ -33,5 +33,15 @@ class CourseSchedule extends Model
     public function reservations()
     {
         return $this->hasMany(Reservation::class, 'schedule_id');
+    }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class, 'state_id');
+    }
+
+    public function municipality()
+    {
+        return $this->belongsTo(Municipality::class, 'municipality_id');
     }
 }
