@@ -12,7 +12,7 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Course::with('user', 'category', 'images', 'schedules', 'reservations', 'usersWhoFavorited');
+            $query = Course::with('category', 'models', 'user', 'schedules', 'schedules.state', 'schedules.municipality',  'reservations', 'usersWhoFavorited', 'images');
 
             if ($request->has('nombre') && !empty($request->nombre)) {
                 $search = $request->nombre;
@@ -41,7 +41,7 @@ class CourseController extends Controller
     public function indexTypeUserCourse(Request $request, $id)
     {
         try {
-            $query = Course::with('user', 'category', 'images', 'schedules', 'reservations', 'usersWhoFavorited')
+            $query = Course::with('category', 'models', 'user', 'schedules', 'schedules.state', 'schedules.municipality',  'reservations', 'usersWhoFavorited', 'images')
                 ->whereHas('schedules', function ($q) use ($id) {
                     $q->where('instructor_id', $id);
                 });
@@ -74,7 +74,7 @@ class CourseController extends Controller
     public function show($id)
     {
         try {
-            $course = Course::with('user', 'category', 'images', 'schedules', 'reservations', 'usersWhoFavorited')->findOrFail($id);
+            $course = Course::with('category', 'models', 'user', 'schedules',  'schedules.instructor', 'schedules.state', 'schedules.municipality',  'reservations', 'usersWhoFavorited', 'images')->findOrFail($id);
             return response()->json($course, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Curso no encontrado', 'mensaje' => $e->getMessage()], 404);

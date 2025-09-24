@@ -24,7 +24,7 @@ class RescheduleReservation extends Mailable
     public function build()
     {
         return $this->from('notificacion@ldrsolutions.com.mx', 'LDR Solutons, Foton')
-            ->subject('Reserva reagendada')
+            ->subject('Reservación Reagendada')
             ->view('mail.reschedulereservation');
     }
 }

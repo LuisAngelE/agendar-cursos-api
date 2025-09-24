@@ -24,7 +24,7 @@ class CancelReservation extends Mailable
     public function build()
     {
         return $this->from('notificacion@ldrsolutions.com.mx', 'LDR Solutons, Foton')
-            ->subject('Reserva Cancelada')
+            ->subject('Reservación Cancelada')
             ->view('mail.cancelreservation');
     }
 }

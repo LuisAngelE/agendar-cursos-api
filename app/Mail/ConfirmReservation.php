@@ -24,7 +24,7 @@ class ConfirmReservation extends Mailable
     public function build()
     {
         return $this->from('notificacion@ldrsolutions.com.mx', 'LDR Solutons, Foton')
-            ->subject('Reserva confirmada')
+            ->subject('Reservación Confirmada')
             ->view('mail.confirmreservation');
     }
 }

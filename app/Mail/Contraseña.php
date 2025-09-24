@@ -24,7 +24,7 @@ class Contraseña extends Mailable
     public function build()
     {
         return $this->from('notificacion@ldrsolutions.com.mx', 'LDR Solutons, Foton')
-            ->subject('Contraseña de tu cuenta')
+            ->subject('Contraseña de tu Cuenta')
             ->view('mail.contraseña');
     }
 }

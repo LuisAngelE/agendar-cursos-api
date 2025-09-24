@@ -25,7 +25,7 @@ class InstructorCliente extends Mailable
     public function build()
     {
         return $this->from('notificacion@ldrsolutions.com.mx', 'LDR Solutons, Foton')
-            ->subject('Instructor asignado a tu curso')
+            ->subject('Instructor Asignado a tu Curso')
             ->view('mail.instructorCliente');
     }
 }
