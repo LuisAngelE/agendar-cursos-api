@@ -308,7 +308,7 @@ class AuthController extends Controller
             $user->password = Hash::make($randomPassword);
             $user->save();
 
-            $url = url('http://localhost:3000/iniciar-sesion');
+            $url = url('http://localhost:3000/');
 
             if ($request->has('preview') && $request->preview == true) {
                 return view('mail.contraseña', compact('randomPassword', 'user', 'url'));
