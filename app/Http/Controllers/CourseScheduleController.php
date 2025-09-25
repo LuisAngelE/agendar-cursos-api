@@ -17,13 +17,48 @@ use Carbon\Carbon;
 
 class CourseScheduleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $schedule = CourseSchedule::with('course', 'instructor', 'reservations', 'reservations.student', 'state', 'municipality')->get();
+            $query = CourseSchedule::with([
+                'course',
+                'instructor',
+                'reservations',
+                'reservations.student',
+                'state',
+                'municipality'
+            ]);
+
+            if ($request->has('nombre') && !empty($request->nombre)) {
+                $search = $request->nombre;
+                $query->whereHas('course', function ($q) use ($search) {
+                    $q->where('title', 'LIKE', "%{$search}%");
+                });
+            }
+
+            if ($request->has('status') && !empty($request->status)) {
+                $status = $request->status;
+                $query->whereHas('reservations', function ($q) use ($status) {
+                    $q->where('status', $status);
+                });
+            }
+
+            if ($request->has('estado') && !empty($request->estado)) {
+                $estado = $request->estado;
+                $query->whereHas('state', function ($q) use ($estado) {
+                    $q->where('id', $estado)
+                        ->orWhere('name', 'LIKE', "%{$estado}%");
+                });
+            }
+
+            $schedule = $query->get();
+
             return response()->json($schedule, 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener los cursos', 'mensaje' => $e->getMessage()], 500);
+            return response()->json([
+                'error' => 'Error al obtener los cursos',
+                'mensaje' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -45,10 +80,17 @@ class CourseScheduleController extends Controller
         }
     }
 
+    public function getDates()
+    {
+        $dates = CourseSchedule::select('start_date')->distinct()->orderBy('start_date', 'asc')->get();
+
+        return response()->json($dates);
+    }
+
     public function show($id)
     {
         try {
-            $schedule = CourseSchedule::with('course', 'instructor', 'reservations', 'reservations.student', 'state', 'municipality')->findOrFail($id);
+            $schedule = CourseSchedule::with('state', 'municipality', 'course', 'course.category', 'course.models', 'course.user', 'instructor', 'reservations', 'reservations.student')->findOrFail($id);
 
             return response()->json($schedule, 200);
         } catch (\Exception $e) {

@@ -27,6 +27,9 @@ Route::post('/update/morales/{id}', [UsersController::class, 'updateMorales']);
 Route::get('/instructores', [UsersController::class, 'instructores']);
 Route::resource('/users', UsersController::class);
 
+//Endpoind Uriel
+Route::get('/course-schedules/dates', [CourseScheduleController::class, 'getDates']);
+
 Route::middleware('auth:sanctum')->group(function () {
     //Categorías
     Route::resource('/categories', CategoriesController::class);
