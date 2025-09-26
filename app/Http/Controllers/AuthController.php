@@ -192,6 +192,7 @@ class AuthController extends Controller
                 'razon_social' => 'nullable|string|max:255',
                 'representante_legal' => 'nullable|string|max:255',
                 'domicilio_fiscal' => 'nullable|string|max:255',
+                'collaborator_number' => 'nullable|string|max:10',
             ], [
                 'email.required' => 'El correo electrónico es obligatorio.',
                 'email.email' => 'El correo electrónico debe ser una dirección válida.',
@@ -203,6 +204,7 @@ class AuthController extends Controller
                 'curp.unique' => 'La CURP ya está registrada.',
                 'rfc.required' => 'El RFC es obligatorio.',
                 'rfc.unique' => 'El RFC ya está registrado.',
+                'collaborator_number.max' => 'El número de colaborador no puede superar los 10 caracteres.',
             ]);
 
             if ($validator->fails()) {
@@ -220,7 +222,8 @@ class AuthController extends Controller
                 'rfc',
                 'razon_social',
                 'representante_legal',
-                'domicilio_fiscal'
+                'domicilio_fiscal',
+                'collaborator_number',
             ]));
 
             return response()->json([
