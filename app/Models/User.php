@@ -25,6 +25,7 @@ class User extends Authenticatable
         'password',
         'type_user',
         'phone',
+        'collaborator_number',
         'type_person',
         'birth_date',
         'curp',

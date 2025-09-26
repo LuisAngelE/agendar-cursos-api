@@ -82,7 +82,18 @@ class CourseScheduleController extends Controller
 
     public function getDates()
     {
-        $dates = CourseSchedule::select('start_date')->distinct()->orderBy('start_date', 'asc')->get();
+        $dates = CourseSchedule::with('instructor')
+            ->select('id', 'start_date', 'instructor_id')
+            ->distinct()
+            ->orderBy('start_date', 'asc')
+            ->get()
+            ->map(function ($schedule) {
+                return [
+                    'start_date' => $schedule->start_date,
+                    'instructor_id' => $schedule->instructor_id ? $schedule->instructor->name : null,
+                    'collaborator_number' => $schedule->instructor ? $schedule->instructor->collaborator_number : null,
+                ];
+            });
 
         return response()->json($dates);
     }

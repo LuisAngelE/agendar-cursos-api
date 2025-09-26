@@ -62,6 +62,7 @@ class UsersController extends Controller
                 'phone' => 'required|string|max:20',
                 'type_user' => 'required|integer|in:1,2,3',
                 'password' => 'required|string|min:8|confirmed',
+                'collaborator_number' => 'nullable|string|max:10',
             ], [
                 'name.required' => 'El nombre es obligatorio.',
                 'name.max' => 'El nombre no puede tener más de 255 caracteres.',
@@ -86,6 +87,7 @@ class UsersController extends Controller
                 'password.required' => 'La contraseña es obligatoria.',
                 'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
                 'password.confirmed' => 'La confirmación de la contraseña no coincide.',
+                'collaborator_number.max' => 'El número de colaborador no puede superar los 10 caracteres.',
             ]);
 
             if ($validator->fails()) {
@@ -101,6 +103,7 @@ class UsersController extends Controller
                 'email',
                 'phone',
                 'type_user',
+                'collaborator_number',
             ]);
 
             $data['password'] = Hash::make($request->password);
@@ -132,6 +135,7 @@ class UsersController extends Controller
                 'phone'               => 'required|string|max:20',
                 'type_user'           => 'required|integer|in:1,2,3',
                 'password'            => 'required|string|min:8|confirmed',
+                'collaborator_number' => 'nullable|string|max:10',
             ], [
                 'razon_social.required' => 'La razón social es obligatoria.',
                 'razon_social.max' => 'La razón social no puede superar los 255 caracteres.',
@@ -153,6 +157,7 @@ class UsersController extends Controller
                 'password.required' => 'La contraseña es obligatoria.',
                 'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
                 'password.confirmed' => 'La confirmación de la contraseña no coincide.',
+                'collaborator_number.max' => 'El número de colaborador no puede superar los 10 caracteres.',
             ]);
 
             if ($validator->fails()) {
@@ -167,6 +172,7 @@ class UsersController extends Controller
                 'email',
                 'phone',
                 'type_user',
+                'collaborator_number',
             ]);
 
             $data['password'] = Hash::make($request->password);
@@ -216,6 +222,7 @@ class UsersController extends Controller
                 'phone' => 'sometimes|required|string|max:20',
                 'type_user' => 'sometimes|required|integer|in:1,2,3',
                 'password' => 'nullable|string|min:8|confirmed',
+                'collaborator_number' => 'nullable|string|max:10',
             ], [
                 'name.required' => 'El nombre es obligatorio.',
                 'name.max' => 'El nombre no puede superar los 255 caracteres.',
@@ -239,6 +246,7 @@ class UsersController extends Controller
                 'type_user.in' => 'El tipo de usuario seleccionado no es válido.',
                 'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
                 'password.confirmed' => 'La confirmación de la contraseña no coincide.',
+                'collaborator_number.max' => 'El número de colaborador no puede superar los 10 caracteres.',
             ]);
 
             if ($validator->fails()) {
@@ -254,6 +262,7 @@ class UsersController extends Controller
                 'email',
                 'phone',
                 'type_user',
+                'collaborator_number',
             ]);
 
             if ($request->filled('password')) {
@@ -296,6 +305,7 @@ class UsersController extends Controller
                 'phone'               => 'sometimes|required|string|max:20',
                 'type_user'           => 'sometimes|required|integer|in:1,2,3',
                 'password'            => 'nullable|string|min:8|confirmed',
+                'collaborator_number' => 'nullable|string|max:10',
             ], [
                 'razon_social.required' => 'La razón social es obligatoria.',
                 'razon_social.max' => 'La razón social no puede superar los 255 caracteres.',
@@ -316,6 +326,7 @@ class UsersController extends Controller
                 'type_user.in' => 'El tipo de usuario seleccionado no es válido.',
                 'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
                 'password.confirmed' => 'La confirmación de la contraseña no coincide.',
+                'collaborator_number.max' => 'El número de colaborador no puede superar los 10 caracteres.',
             ]);
 
             if ($validator->fails()) {
@@ -332,6 +343,7 @@ class UsersController extends Controller
                 'email',
                 'phone',
                 'type_user',
+                'collaborator_number',
             ]);
 
             if ($request->filled('password')) {
