@@ -39,10 +39,10 @@ class Reservation extends Model
         return $this->belongsTo(Course::class);
     }
 
-    // Relación inversa uno a muchos con CourseSchedule: la reserva pertenece a un horario específico
+    // Relación inversa uno a muchos con EventsSchedule: la reserva pertenece a un horario específico
     public function schedule()
     {
-        return $this->belongsTo(CourseSchedule::class, 'schedule_id');
+        return $this->belongsTo(EventsSchedule::class, 'schedule_id');
     }
 
     // Scope para filtrar reservas por estado (pendiente, confirmada, servida, cancelada)

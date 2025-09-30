@@ -3,7 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CourseController;
-use App\Http\Controllers\CourseScheduleController;
+use App\Http\Controllers\EventsScheduleController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ImageCourseController;
 use App\Http\Controllers\ReservationControlller;
@@ -28,7 +28,7 @@ Route::get('/instructores', [UsersController::class, 'instructores']);
 Route::resource('/users', UsersController::class);
 
 //Endpoind Uriel
-Route::get('/course-schedules/dates', [CourseScheduleController::class, 'getDates']);
+Route::get('/course-schedules/dates', [EventsScheduleController::class, 'getDates']);
 
 Route::middleware('auth:sanctum')->group(function () {
     //Categorías
@@ -40,10 +40,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/courses/{id}/images', [ImageCourseController::class, 'courseImageUpload']);
 
     //Agendación Fecha
-    Route::post('/courses/{courseId}/assign-instructor', [CourseScheduleController::class, 'assignInstructor']);
-    Route::get('/indexTypeUserAgenda/{id}', [CourseScheduleController::class, 'indexTypeUserAgenda']);
-    Route::post('/courseSchedule/{id}/edit', [CourseScheduleController::class, 'update']);
-    Route::resource('/courseSchedule', CourseScheduleController::class);
+    Route::post('/courses/{courseId}/assign-instructor', [EventsScheduleController::class, 'assignInstructor']);
+    Route::get('/indexTypeUserAgenda/{id}', [EventsScheduleController::class, 'indexTypeUserAgenda']);
+    Route::post('/courseSchedule/{id}/edit', [EventsScheduleController::class, 'update']);
+    Route::resource('/courseSchedule', EventsScheduleController::class);
 
     //Status Reservas
     Route::post('/reservations/{reservationId}/confirm', [ReservationControlller::class, 'confirmReservation']);

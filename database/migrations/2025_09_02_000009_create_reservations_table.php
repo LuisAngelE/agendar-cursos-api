@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->foreignId('schedule_id')
                 ->nullable()
-                ->constrained('course_schedules')
+                ->constrained('events_schedules')
                 ->onDelete('cascade');
 
             $table->dateTime('reserved_at')

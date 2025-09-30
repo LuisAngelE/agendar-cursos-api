@@ -5,17 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CourseSchedule extends Model
+class EventsSchedule extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'instructor_id',
         'course_id',
+        'event_type',
+        'reference_id',
+        'start_date',
+        'end_date',
+        'location',
         'state_id',
         'municipality_id',
-        'start_date',
-        'location',
     ];
 
     // Relación inversa uno a muchos con Course: el horario pertenece a un curso

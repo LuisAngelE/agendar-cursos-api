@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Mail\HorarioActualizado;
 use App\Mail\Instructor;
-use App\Mail\InstructorCliente;
 use App\Mail\NuevoHorario;
-use App\Models\Course;
-use App\Models\CourseSchedule;
+use App\Models\EventsSchedule;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,12 +13,12 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 
-class CourseScheduleController extends Controller
+class EventsScheduleController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         try {
-            $query = CourseSchedule::with([
+            $query = EventsSchedule::with([
                 'course',
                 'instructor',
                 'reservations',
@@ -28,28 +26,6 @@ class CourseScheduleController extends Controller
                 'state',
                 'municipality'
             ]);
-
-            if ($request->has('nombre') && !empty($request->nombre)) {
-                $search = $request->nombre;
-                $query->whereHas('course', function ($q) use ($search) {
-                    $q->where('title', 'LIKE', "%{$search}%");
-                });
-            }
-
-            if ($request->has('status') && !empty($request->status)) {
-                $status = $request->status;
-                $query->whereHas('reservations', function ($q) use ($status) {
-                    $q->where('status', $status);
-                });
-            }
-
-            if ($request->has('estado') && !empty($request->estado)) {
-                $estado = $request->estado;
-                $query->whereHas('state', function ($q) use ($estado) {
-                    $q->where('id', $estado)
-                        ->orWhere('name', 'LIKE', "%{$estado}%");
-                });
-            }
 
             $schedule = $query->get();
 
@@ -65,7 +41,7 @@ class CourseScheduleController extends Controller
     public function indexTypeUserAgenda($id)
     {
         try {
-            $schedule = CourseSchedule::with('course', 'instructor', 'reservations', 'reservations.student', 'state', 'municipality')
+            $schedule = EventsSchedule::with('course', 'instructor', 'reservations', 'reservations.student', 'state', 'municipality')
                 ->whereHas('course', function ($query) use ($id) {
                     $query->where('instructor_id', $id);
                 })
@@ -82,15 +58,19 @@ class CourseScheduleController extends Controller
 
     public function getDates()
     {
-        $dates = CourseSchedule::with('instructor')
-            ->select('id', 'start_date', 'instructor_id')
-            ->distinct()
+        $dates = EventsSchedule::with('instructor')
+            ->select('id', 'instructor_id', 'event_type', 'reference_id', 'start_date', 'end_date')
             ->orderBy('start_date', 'asc')
             ->get()
             ->map(function ($schedule) {
                 return [
+                    'id' => $schedule->id,
+                    'event_type' => $schedule->event_type,
+                    'reference_id' => $schedule->reference_id,
                     'start_date' => $schedule->start_date,
-                    'instructor_id' => $schedule->instructor_id ? $schedule->instructor->name : null,
+                    'end_date' => $schedule->end_date,
+                    'instructor_id' => $schedule->instructor_id,
+                    'instructor_name' => $schedule->instructor ? $schedule->instructor->name : null,
                     'collaborator_number' => $schedule->instructor ? $schedule->instructor->collaborator_number : null,
                 ];
             });
@@ -98,10 +78,11 @@ class CourseScheduleController extends Controller
         return response()->json($dates);
     }
 
+
     public function show($id)
     {
         try {
-            $schedule = CourseSchedule::with('state', 'municipality', 'course', 'course.category', 'course.models', 'course.user', 'instructor', 'reservations', 'reservations.student')->findOrFail($id);
+            $schedule = EventsSchedule::with('state', 'municipality', 'course', 'course.category', 'course.models', 'course.user', 'instructor', 'reservations', 'reservations.student')->findOrFail($id);
 
             return response()->json($schedule, 200);
         } catch (\Exception $e) {
@@ -134,7 +115,7 @@ class CourseScheduleController extends Controller
 
             $date = Carbon::parse($validated['start_date']);
 
-            $existingSchedulesCount  = CourseSchedule::where('course_id', $validated['course_id'])
+            $existingSchedulesCount  = EventsSchedule::where('course_id', $validated['course_id'])
                 ->whereDate('start_date', $date->toDateString())
                 ->count();
 
@@ -152,7 +133,13 @@ class CourseScheduleController extends Controller
                 ], 422);
             }
 
-            $schedule = CourseSchedule::create($validated);
+            $schedule = EventsSchedule::create(array_merge(
+                $validated,
+                [
+                    'event_type'   => 'curso',
+                    'reference_id' => $validated['course_id'],
+                ]
+            ));
 
             $reservation = Reservation::create([
                 'student_id'  => Auth::id(),
@@ -212,10 +199,10 @@ class CourseScheduleController extends Controller
                 'location.max'             => 'La ubicación no debe exceder los 255 caracteres.',
             ]);
 
-            $schedule = CourseSchedule::findOrFail($id);
+            $schedule = EventsSchedule::findOrFail($id);
             $date = Carbon::parse($validated['start_date']);
 
-            $existingSchedulesCount = CourseSchedule::where('course_id', $validated['course_id'])
+            $existingSchedulesCount = EventsSchedule::where('course_id', $validated['course_id'])
                 ->whereDate('start_date', $date->toDateString())
                 ->where('id', '!=', $schedule->id)
                 ->count();
@@ -281,7 +268,7 @@ class CourseScheduleController extends Controller
                 'instructor_id.exists' => 'El instructor no existe.',
             ]);
 
-            $schedule = CourseSchedule::with('reservations.student', 'course')->findOrFail($scheduleId);
+            $schedule = EventsSchedule::with('reservations.student', 'course')->findOrFail($scheduleId);
             if (!$schedule) {
                 return response()->json(['error' => 'No existe ese horario con ese id.'], 404);
             }
@@ -318,7 +305,7 @@ class CourseScheduleController extends Controller
     public function destroy($id)
     {
         try {
-            $schedule = CourseSchedule::findOrFail($id);
+            $schedule = EventsSchedule::findOrFail($id);
 
             Reservation::where('schedule_id', $schedule->id)->delete();
 

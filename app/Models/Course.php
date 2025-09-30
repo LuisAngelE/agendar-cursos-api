@@ -38,10 +38,10 @@ class Course extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    // Relación uno a muchos con CourseSchedule: un curso puede tener muchos horarios
+    // Relación uno a muchos con EventsSchedule: un curso puede tener muchos horarios
     public function schedules()
     {
-        return $this->hasMany(CourseSchedule::class);
+        return $this->hasMany(EventsSchedule::class);
     }
 
     // Relación uno a muchos con Reservation: un curso puede tener muchas reservas

@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
             'rfc' => 'EIML031227HMC',
             'email' => 'luisangelem.dp@gmail.com',
             'phone' => '0123456789',
+            'collaborator_number' => '250001',
             'razon_social' => 'LDR Solutions',
             'representante_legal' => 'CEO',
             'domicilio_fiscal' => 'Santa Fe',
