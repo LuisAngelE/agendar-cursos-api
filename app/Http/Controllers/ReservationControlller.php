@@ -50,7 +50,7 @@ class ReservationControlller extends Controller
         }
     }
 
-    public function cancelReservation($reservationId)
+    public function cancelReservation(Request $request,$reservationId)
     {
         try {
             $reservation = Reservation::find($reservationId);
@@ -68,6 +68,7 @@ class ReservationControlller extends Controller
             }
 
             $reservation->status = Reservation::STATUS_CANCELED;
+            $reservation->cancellation_reason = $request->input('motivo');
             $reservation->save();
 
             $url = url('http://localhost:3000/Agenda');

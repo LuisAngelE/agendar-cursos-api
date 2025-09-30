@@ -20,6 +20,7 @@ class Reservation extends Model
         'schedule_id',
         'reserved_at',
         'status',
+        'cancellation_reason',
     ];
 
     protected $casts = [

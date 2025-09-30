@@ -29,6 +29,8 @@ return new class extends Migration
 
             $table->unsignedTinyInteger('status')->default(1);
 
+            $table->text('cancellation_reason')->nullable();
+
             $table->timestamps();
 
             $table->unique(['student_id', 'course_id', 'schedule_id'], 'unique_reservation');

@@ -298,11 +298,6 @@ class CourseScheduleController extends Controller
                 Mail::to($instructor->email)->send(new Instructor($schedule, $reservation, $url));
             }
 
-            // Enviar correo al cliente (student)
-            if ($reservation && $reservation->student && $reservation->student->email) {
-                Mail::to($reservation->student->email)->send(new InstructorCliente($schedule, $reservation, $url));
-            }
-
             return response()->json([
                 'mensaje' => 'Instructor asignado y notificaciones enviadas correctamente.',
                 'schedule' => $schedule,

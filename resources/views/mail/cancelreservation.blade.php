@@ -54,6 +54,13 @@
                                     <td style="padding:5px 0;"><strong>Instructor:</strong></td>
                                     <td>{{ $schedule->instructor->name ?? 'No asignado' }}</td>
                                 </tr>
+                                @if ($reservation->cancellation_reason)
+                                    <tr>
+                                        <td style="padding:5px 0; color:#c0392b;"><strong>Motivo de
+                                                cancelación:</strong></td>
+                                        <td>{{ $reservation->cancellation_reason }}</td>
+                                    </tr>
+                                @endif
                             </table>
 
                             <div style="text-align:center;">
