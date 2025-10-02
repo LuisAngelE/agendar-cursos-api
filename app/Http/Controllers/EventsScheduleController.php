@@ -38,6 +38,20 @@ class EventsScheduleController extends Controller
         }
     }
 
+    public function indexCount()
+    {
+        try {
+            $schedule = EventsSchedule::select('id')->get();
+
+            return response()->json($schedule, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al obtener los cursos',
+                'mensaje' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function indexTypeUserAgenda($id)
     {
         try {
@@ -53,6 +67,27 @@ class EventsScheduleController extends Controller
             return response()->json($schedule, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener los cursos', 'mensaje' => $e->getMessage()], 500);
+        }
+    }
+
+    public function indexTypeUserAgendaCount($id)
+    {
+        try {
+            $schedule = EventsSchedule::whereHas('course', function ($query) use ($id) {
+                $query->where('instructor_id', $id);
+            })
+                ->orWhereHas('reservations', function ($query) use ($id) {
+                    $query->where('student_id', $id);
+                })
+                ->select('id')
+                ->get();
+
+            return response()->json($schedule, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al obtener los cursos',
+                'mensaje' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -77,8 +112,7 @@ class EventsScheduleController extends Controller
 
         return response()->json($dates);
     }
-
-
+    
     public function show($id)
     {
         try {
