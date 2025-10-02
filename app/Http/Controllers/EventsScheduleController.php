@@ -41,7 +41,8 @@ class EventsScheduleController extends Controller
     public function indexCount()
     {
         try {
-            $schedule = EventsSchedule::select('id')->get();
+            $schedule = EventsSchedule::select('id')->where('event_type', 'curso')
+                ->get();
 
             return response()->json($schedule, 200);
         } catch (\Exception $e) {
@@ -112,7 +113,7 @@ class EventsScheduleController extends Controller
 
         return response()->json($dates);
     }
-    
+
     public function show($id)
     {
         try {

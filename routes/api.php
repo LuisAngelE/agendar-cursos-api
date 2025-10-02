@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EventsScheduleController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\GraphicsController;
 use App\Http\Controllers\ImageCourseController;
 use App\Http\Controllers\ReservationControlller;
 use App\Http\Controllers\StateController;
@@ -65,6 +66,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/states/municipalities/{state_id}', [StateController::class, 'getMunicipalitiesByState']);
     Route::get('/states', [StateController::class, 'index']);
+
+    // Graficas
+    Route::get('/countCategories', [GraphicsController::class, 'countCategories']);
+    Route::get('/countCourse', [GraphicsController::class, 'countCourse']);
+    Route::get('/countReservation', [GraphicsController::class, 'countReservation']);
+    Route::get('/countUser', [GraphicsController::class, 'countUser']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
