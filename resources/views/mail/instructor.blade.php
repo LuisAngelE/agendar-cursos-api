@@ -42,16 +42,38 @@
                                     <td>{{ $schedule->course->title }}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding:5px 0;"><strong>Fecha:</strong></td>
+                                    <td style="padding:5px 0;"><strong>Fecha Solicitada:</strong></td>
                                     <td>{{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m/Y H:i') }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:5px 0;"><strong>Estado:</strong></td>
+                                    <td>{{ $schedule->state->name ?? 'Estado no definido' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:5px 0;"><strong>Municipio:</strong></td>
+                                    <td>{{ $schedule->municipality->name ?? 'Municipio no definido' }}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding:5px 0;"><strong>Locación:</strong></td>
                                     <td>{{ $schedule->location }}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding:5px 0;"><strong>Estudiante:</strong></td>
-                                    <td>{{ $reservation->student->name ?? 'Usuario' }}</td>
+                                    <td style="padding:5px 0;"><strong>Solicitante:</strong></td>
+                                    <td>{{ $reservation->student->name ?? '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:5px 0;"><strong>Status:</strong></td>
+                                    <td>
+                                        @php
+                                            $statuses = [
+                                                1 => 'Pendiente',
+                                                2 => 'Confirmada',
+                                                3 => 'Cancelada',
+                                                4 => 'Atendida',
+                                            ];
+                                        @endphp
+                                        {{ $statuses[$reservation->status] ?? 'Desconocido' }}
+                                    </td>
                                 </tr>
                             </table>
 
@@ -60,7 +82,7 @@
                                     style="display:inline-block; background:#F05E29; color:#ffffff;
                                       font-size:16px; font-weight:bold; text-decoration:none; padding:14px 28px;
                                       border-radius:6px;">
-                                    Ver Curso
+                                    Mis Cursos Reservados
                                 </a>
                             </div>
                         </td>
