@@ -62,7 +62,7 @@
                                     style="display:inline-block; background:#F05E29; color:#ffffff;
                                       font-size:16px; font-weight:bold; text-decoration:none; padding:14px 28px;
                                       border-radius:6px;">
-                                    Mis Cursos Agendados
+                                    Mis Cursos Reservados
                                 </a>
                             </div>
                         </td>

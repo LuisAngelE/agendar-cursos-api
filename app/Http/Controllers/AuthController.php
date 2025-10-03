@@ -311,7 +311,7 @@ class AuthController extends Controller
             $user->password = Hash::make($randomPassword);
             $user->save();
 
-            $url = url('http://localhost:3000/');
+            $url = url('https://testcursos.ldrhumanresources.com/Agenda');
 
             if ($request->has('preview') && $request->preview == true) {
                 return view('mail.contraseña', compact('randomPassword', 'user', 'url'));

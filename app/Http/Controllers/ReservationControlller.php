@@ -31,7 +31,7 @@ class ReservationControlller extends Controller
             $reservation->status = Reservation::STATUS_CONFIRMED;
             $reservation->save();
 
-            $url = url('http://localhost:3000/Agenda');
+            $url = url('https://testcursos.ldrhumanresources.com/Agenda');
 
             $schedule = $reservation->schedule;
             if ($reservation->student && $reservation->student->email) {
@@ -71,7 +71,7 @@ class ReservationControlller extends Controller
             $reservation->cancellation_reason = $request->input('motivo');
             $reservation->save();
 
-            $url = url('http://localhost:3000/Agenda');
+            $url = url('https://testcursos.ldrhumanresources.com/Agenda');
 
             $schedule = $reservation->schedule;
             if ($reservation->student && $reservation->student->email) {
@@ -143,7 +143,7 @@ class ReservationControlller extends Controller
             $reservation->status = Reservation::STATUS_CONFIRMED;
             $reservation->save();
 
-            $url = url('http://localhost:3000/Agenda');
+            $url = url('https://testcursos.ldrhumanresources.com/Agenda');
 
             $schedule = $reservation->schedule;
             if ($reservation->student && $reservation->student->email) {

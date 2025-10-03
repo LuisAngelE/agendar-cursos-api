@@ -24,7 +24,7 @@ class HorarioActualizado extends Mailable
     public function build()
     {
         return $this->from('notificacion@ldrsolutions.com.mx', 'LDR Solutons, Foton')
-            ->subject('Tienes un Curso Agendado Actualizado')
+            ->subject('Tienes un Curso Reservado Actualizado')
             ->view('mail.horarioactualizado');
     }
 }

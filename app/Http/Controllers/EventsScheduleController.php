@@ -183,7 +183,7 @@ class EventsScheduleController extends Controller
                 'status'      => Reservation::STATUS_PENDING,
             ]);
 
-            $url = url('http://localhost:3000/Agenda');
+            $url = url('https://testcursos.ldrhumanresources.com/Agenda');
 
             $courseOwner = $schedule->course->user;
             if ($courseOwner && $courseOwner->email) {
@@ -265,7 +265,7 @@ class EventsScheduleController extends Controller
                 ]);
             }
 
-            $url = url('http://localhost:3000/Agenda');
+            $url = url('https://testcursos.ldrhumanresources.com/Agenda');
 
             $courseOwner = $schedule->course->user;
             if ($courseOwner && $courseOwner->email) {
@@ -312,7 +312,7 @@ class EventsScheduleController extends Controller
             $schedule->save();
 
             $reservation = $schedule->reservations->first();
-            $url = url('http://localhost:3000/Agenda');
+            $url = url('https://testcursos.ldrhumanresources.com/Agenda');
 
             // Enviar correo al instructor
             $instructor = $schedule->instructor;
