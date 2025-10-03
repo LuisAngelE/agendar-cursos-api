@@ -28,7 +28,7 @@
                             <h2
                                 style="font-size:20px; margin:0 0 15px 0; color:#333; font-weight:normal; line-height:1.4;">
                                 Buen día <span
-                                    style="color:#F05E29; font-weight:bold;">{{ $reservation->student->name }}</span>,
+                                    style="color:#F05E29; font-weight:bold;">{{ $reservation->student->name, $reservation->student->last_name }}</span>,
                             </h2>
 
                             <p style="font-size:15px; line-height:1.6; margin:0 0 15px 0;">
@@ -44,16 +44,43 @@
                                     <td>{{ $schedule->course->title }}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding:5px 0;"><strong>Fecha:</strong></td>
+                                    <td style="padding:5px 0;"><strong>Fecha Solicitada:</strong></td>
                                     <td>{{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m/Y H:i') }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:5px 0;"><strong>Estado:</strong></td>
+                                    <td>{{ $schedule->state->name ?? 'Estado no definido' }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:5px 0;"><strong>Municipio:</strong></td>
+                                    <td>{{ $schedule->municipality->name ?? 'Municipio no definido' }}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding:5px 0;"><strong>Locación:</strong></td>
                                     <td>{{ $schedule->location }}</td>
                                 </tr>
                                 <tr>
+                                    <td style="padding:5px 0;"><strong>Solicitante:</strong></td>
+                                    <td>{{ $reservation->student->name, $reservation->student->last_name ?? '' }}</td>
+                                </tr>
+                                <tr>
                                     <td style="padding:5px 0;"><strong>Instructor:</strong></td>
-                                    <td>{{ $schedule->instructor->name ?? 'Por asignar' }}</td>
+                                    <td>{{ $schedule->instructor->name, $schedule->instructor->last_name ?? 'Por asignar' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:5px 0;"><strong>Status:</strong></td>
+                                    <td>
+                                        @php
+                                            $statuses = [
+                                                1 => 'Pendiente',
+                                                2 => 'Confirmada',
+                                                3 => 'Cancelada',
+                                                4 => 'Atendida',
+                                            ];
+                                        @endphp
+                                        {{ $statuses[$reservation->status] ?? 'Desconocido' }}
+                                    </td>
                                 </tr>
                             </table>
 
@@ -71,9 +98,9 @@
                     <tr>
                         <td style="padding:20px; text-align:center; font-size:13px; color:#666; background:#fafafa;">
                             <div style="height:1px;background:#ddd;margin:20px 0;"></div>
-                            Gracias por confiar en <span style="color:#F05E29; font-weight:bold;">LDR
+                            Agradecemos tu confianza en <span style="color:#F05E29; font-weight:bold;">LDR
                                 Solutions</span>.<br>
-                            ¡Esperamos que tengas una excelente experiencia!
+                            ¡Que tengas una excelente experiencia utilizando nuestros servicios!
                         </td>
                     </tr>
 

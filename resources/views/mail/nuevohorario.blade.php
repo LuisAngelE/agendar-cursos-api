@@ -61,7 +61,7 @@
                                 </tr>
                                 <tr>
                                     <td style="padding:5px 0;"><strong>Solicitante:</strong></td>
-                                    <td>{{ $reservation->student->name ?? '' }}</td>
+                                    <td>{{ $reservation->student->name, $reservation->student->last_name ?? '' }}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding:5px 0;"><strong>Status:</strong></td>

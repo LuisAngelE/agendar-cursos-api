@@ -64,6 +64,11 @@
                                     <td>{{ $reservation->student->name ?? 'Usuario' }}</td>
                                 </tr>
                                 <tr>
+                                    <td style="padding:5px 0;"><strong>Instructor:</strong></td>
+                                    <td>{{ $schedule->instructor->name, $schedule->instructor->last_name ?? 'Por asignar' }}
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td style="padding:5px 0;"><strong>Status:</strong></td>
                                     <td>
                                         @php

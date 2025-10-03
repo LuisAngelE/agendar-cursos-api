@@ -28,7 +28,7 @@
                             <h2
                                 style="font-size:20px; margin:0 0 15px 0; color:#333; font-weight:normal; line-height:1.4;">
                                 Hola <span
-                                    style="color:#F05E29; font-weight:bold;">{{ $schedule->instructor->name }}</span>,
+                                    style="color:#F05E29; font-weight:bold;">{{ $schedule->instructor->name, $schedule->instructor->last_name }}</span>,
                             </h2>
 
                             <p style="font-size:15px; line-height:1.6; margin:0 0 15px 0;">
@@ -62,6 +62,11 @@
                                     <td>{{ $reservation->student->name ?? '' }}</td>
                                 </tr>
                                 <tr>
+                                    <td style="padding:5px 0;"><strong>Instructor:</strong></td>
+                                    <td>{{ $schedule->instructor->name, $schedule->instructor->last_name ?? 'Por asignar' }}
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td style="padding:5px 0;"><strong>Status:</strong></td>
                                     <td>
                                         @php
@@ -91,9 +96,9 @@
                     <tr>
                         <td style="padding:20px; text-align:center; font-size:13px; color:#666; background:#fafafa;">
                             <div style="height:1px;background:#ddd;margin:20px 0;"></div>
-                            Gracias por ser parte de <span style="color:#F05E29; font-weight:bold;">LDR
+                            Agradecemos tu confianza en <span style="color:#F05E29; font-weight:bold;">LDR
                                 Solutions</span>.<br>
-                            ¡Te deseamos mucho éxito en tu curso!
+                            ¡Que tengas una excelente experiencia utilizando nuestros servicios!
                         </td>
                     </tr>
 
