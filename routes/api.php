@@ -28,7 +28,7 @@ Route::post('/update/morales/{id}', [UsersController::class, 'updateMorales']);
 Route::get('/instructores', [UsersController::class, 'instructores']);
 Route::resource('/users', UsersController::class);
 
-//Endpoind Uriel
+//Endpoind Fechas en Events
 Route::get('/course-schedules/dates', [EventsScheduleController::class, 'getDates']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -60,20 +60,23 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/resetPassword', [AuthController::class, 'resetPassword']);
     Route::get('/me', [AuthController::class, 'me']);
 
+    //Favoritos
     Route::get('/favorites', [FavoriteController::class, 'index']);
     Route::post('/favorites', [FavoriteController::class, 'store']);
     Route::delete('/favorites/{course}', [FavoriteController::class, 'destroy']);
 
+    //Estados y municipios
     Route::get('/states/municipalities/{state_id}', [StateController::class, 'getMunicipalitiesByState']);
     Route::get('/states', [StateController::class, 'index']);
 
-    // Graficas
+    //Graficas
     Route::get('/countCategories', [GraphicsController::class, 'countCategories']);
     Route::get('/countCourse', [GraphicsController::class, 'countCourse']);
     Route::get('/countReservation', [GraphicsController::class, 'countReservation']);
     Route::get('/countUser', [GraphicsController::class, 'countUser']);
 });
 
+//Usuario autenticado
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     $user = $request->user();
 
