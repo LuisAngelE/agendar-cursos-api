@@ -27,16 +27,17 @@ Route::post('/update/morales/{id}', [UsersController::class, 'updateMorales']);
 
 Route::get('/instructores', [UsersController::class, 'instructores']);
 Route::resource('/users', UsersController::class);
+Route::resource('/course', CourseController::class);
 
 //Endpoind Fechas en Events
 Route::get('/course-schedules/dates', [EventsScheduleController::class, 'getDates']);
+Route::post('/storeDemo', [EventsScheduleController::class, 'storeDemo']);
 
 Route::middleware('auth:sanctum')->group(function () {
     //Categorías
     Route::resource('/categories', CategoriesController::class);
 
     //Cursos
-    Route::resource('/course', CourseController::class);
     Route::get('/indexTypeUserCourse/{id}', [CourseController::class, 'indexTypeUserCourse']);
     Route::post('/courses/{id}/images', [ImageCourseController::class, 'courseImageUpload']);
 

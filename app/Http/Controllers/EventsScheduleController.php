@@ -211,6 +211,68 @@ class EventsScheduleController extends Controller
         }
     }
 
+    public function storeDemo(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'instructor_id' => 'required|exists:users,id',
+                'reference_id'  => 'required|integer',
+                'start_date'    => 'required|date_format:Y-m-d',
+            ], [
+                'instructor_id.required' => 'El master driver es obligatorio.',
+                'instructor_id.exists'   => 'El master driver seleccionado no existe.',
+                'reference_id.required'  => 'El ID de referencia es obligatorio.',
+                'start_date.required'    => 'La fecha de inicio es obligatoria.',
+                'start_date.date_format' => 'La fecha de inicio debe tener el formato AAAA-MM-DD',
+            ]);
+
+            $date = Carbon::parse($validated['start_date']);
+
+            $existingSchedulesCount = EventsSchedule::whereIn('event_type', ['curso', 'demo'])
+                ->whereDate('start_date', $date->toDateString())
+                ->count();
+
+            if ($existingSchedulesCount >= 3) {
+                return response()->json([
+                    'success' => false,
+                    'error'   => 'Solo se pueden registrar hasta 3 horarios para este demo en la misma fecha.',
+                ], 422);
+            }
+
+            if ($date->isPast()) {
+                return response()->json([
+                    'success' => false,
+                    'error'   => 'No puedes agendar una demo en una fecha pasada.',
+                ], 422);
+            }
+
+            $schedule = EventsSchedule::create([
+                'instructor_id' => $validated['instructor_id'],
+                'reference_id'  => $validated['reference_id'],
+                'start_date'    => $validated['start_date'],
+                'event_type'    => 'demo',
+            ]);
+
+            return response()->json([
+                'success'  => true,
+                'mensaje'  => 'Horario de demo creado correctamente.',
+                'schedule' => $schedule,
+            ], 201);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'error'   => 'Error de validación.',
+                'errors'  => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error'   => 'Error al crear el horario.',
+                'mensaje' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function update(Request $request, $id)
     {
         try {
