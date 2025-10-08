@@ -32,6 +32,7 @@ return new class extends Migration
             $table->text('cancellation_reason')->nullable();
 
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique(['student_id', 'course_id', 'schedule_id'], 'unique_reservation');
         });

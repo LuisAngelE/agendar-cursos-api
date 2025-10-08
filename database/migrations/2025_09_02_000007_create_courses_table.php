@@ -23,7 +23,9 @@ class CreateCoursesTable extends Migration
             $table->string('modality')->default('presencial');
             $table->string('duration')->nullable();
             $table->string('syllabus_pdf')->nullable();
+            $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

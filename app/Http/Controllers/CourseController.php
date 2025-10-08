@@ -123,7 +123,25 @@ class CourseController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $course = Course::findOrFail($id);
+            $course = Course::with(['schedules', 'reservations', 'images'])->findOrFail($id);
+
+            if ($course->schedules->count() > 0) {
+                return response()->json([
+                    'error' => 'No se puede editar el curso porque tiene horarios asociados'
+                ], 400);
+            }
+
+            if ($course->reservations->count() > 0) {
+                return response()->json([
+                    'error' => 'No se puede editar el curso porque tiene reservas asociadas'
+                ], 400);
+            }
+
+            if ($course->images->count() > 0) {
+                return response()->json([
+                    'error' => 'No se puede eliminar el curso porque tiene imágenes asociadas'
+                ], 400);
+            }
 
             $validated = $request->validate([
                 'instructor_id' => 'nullable|exists:users,id',
@@ -157,16 +175,37 @@ class CourseController extends Controller
         }
     }
 
-    // Eliminar un curso
     public function destroy($id)
     {
         try {
-            $course = Course::findOrFail($id);
+            $course = Course::with(['schedules', 'reservations', 'images'])->findOrFail($id);
+
+            if ($course->schedules->count() > 0) {
+                return response()->json([
+                    'error' => 'No se puede eliminar el curso porque tiene horarios asociados'
+                ], 400);
+            }
+
+            if ($course->reservations->count() > 0) {
+                return response()->json([
+                    'error' => 'No se puede eliminar el curso porque tiene reservas asociadas'
+                ], 400);
+            }
+
+            if ($course->images->count() > 0) {
+                return response()->json([
+                    'error' => 'No se puede eliminar el curso porque tiene imágenes asociadas'
+                ], 400);
+            }
+
             $course->delete();
 
             return response()->json(['mensaje' => 'Curso eliminado correctamente'], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al eliminar el curso', 'mensaje' => $e->getMessage()], 500);
+            return response()->json([
+                'error' => 'Error al eliminar el curso',
+                'mensaje' => $e->getMessage()
+            ], 500);
         }
     }
 }

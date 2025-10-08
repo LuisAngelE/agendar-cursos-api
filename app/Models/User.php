@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     const Admin = 1;
     const Instructor = 2;
@@ -35,7 +36,12 @@ class User extends Authenticatable
         'domicilio_fiscal',
     ];
 
+    protected $dates = ['deleted_at'];
+
     protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
         'password',
         'remember_token',
     ];

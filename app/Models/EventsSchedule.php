@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EventsSchedule extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'instructor_id',
@@ -19,6 +20,13 @@ class EventsSchedule extends Model
         'location',
         'state_id',
         'municipality_id',
+    ];
+
+    protected $dates = ['deleted_at'];
+
+    protected $hidden = [
+        'updated_at',
+        'deleted_at',
     ];
 
     // Relación inversa uno a muchos con Course: el horario pertenece a un curso

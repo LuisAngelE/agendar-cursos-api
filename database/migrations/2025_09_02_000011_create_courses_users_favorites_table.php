@@ -22,6 +22,7 @@ class CreateCoursesUsersFavoritesTable extends Migration
                 ->constrained('courses')
                 ->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
 
             // Evitar duplicados: un usuario no puede marcar el mismo curso más de una vez
             $table->unique(['user_id', 'course_id']);

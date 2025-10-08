@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Course extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    const Activo = 1;
+    const Inactivo = 2;
 
     protected $fillable = [
         'category_id',
@@ -18,6 +22,15 @@ class Course extends Model
         'modality',
         'duration',
         'syllabus_pdf',
+        'status',
+    ];
+
+    protected $dates = ['deleted_at'];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     // Relación uno a muchos con Category: un curso pertenece a una categoría
@@ -26,7 +39,7 @@ class Course extends Model
         return $this->belongsTo(categories::class, 'category_id');
     }
 
-    // Relación uno a muchos con Category: un curso pertenece a una categoría
+    // Relación uno a muchos con Models: un curso pertenece a un modelo
     public function models()
     {
         return $this->belongsTo(Models::class, 'model_id');

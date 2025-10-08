@@ -53,7 +53,14 @@ class CategoriesController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $category = categories::findOrFail($id);
+            $category = categories::with('courses')->findOrFail($id);
+
+            if ($category->courses->count() > 0) {
+                return response()->json([
+                    'error' => 'No se puede actualizar la categoría',
+                    'mensaje' => 'Esta categoría tiene cursos asociados y no puede ser modificada.',
+                ], 400);
+            }
 
             $validated = $request->validate([
                 'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
@@ -77,11 +84,23 @@ class CategoriesController extends Controller
     public function destroy($id)
     {
         try {
-            $category = categories::findOrFail($id);
+            $category = categories::with('courses')->findOrFail($id);
+
+            if ($category->courses->count() > 0) {
+                return response()->json([
+                    'error' => 'No se puede eliminar la categoría',
+                    'mensaje' => 'Esta categoría tiene cursos asociados y no puede ser eliminada.',
+                ], 400);
+            }
+
             $category->delete();
-            return response()->json(['mensaje' => 'Categoría eliminada correctamente'], 200);
+
+            return response()->json(['mensaje' => 'Categoría eliminada correctamente.'], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al eliminar la categoría', 'mensaje' => $e->getMessage()], 500);
+            return response()->json([
+                'error' => 'Error al eliminar la categoría',
+                'mensaje' => $e->getMessage(),
+            ], 500);
         }
     }
 }

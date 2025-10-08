@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Reservation extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     const STATUS_PENDING = 1;
     const STATUS_CONFIRMED = 2;
@@ -21,6 +22,13 @@ class Reservation extends Model
         'reserved_at',
         'status',
         'cancellation_reason',
+    ];
+
+    protected $dates = ['deleted_at'];
+
+    protected $hidden = [
+        'updated_at',
+        'deleted_at',
     ];
 
     protected $casts = [

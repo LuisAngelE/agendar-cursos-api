@@ -19,9 +19,10 @@ class CreateImageCoursesTable extends Migration
             $table->string('url', 255);
             $table->string('type', 50)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
-    
+
     /**
      * Reverse the migrations.
      *

@@ -44,7 +44,7 @@
                                     <td>{{ $schedule->course->title }}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding:5px 0;"><strong>Fecha Solicitada:</strong></td>
+                                    <td style="padding:5px 0;"><strong>Fecha y hora solicitada:</strong></td>
                                     <td>{{ \Carbon\Carbon::parse($schedule->start_date)->format('d/m/Y H:i') }}</td>
                                 </tr>
                                 <tr>
@@ -89,7 +89,7 @@
                                     style="display:inline-block; background:#F05E29; color:#ffffff;
                                       font-size:16px; font-weight:bold; text-decoration:none; padding:14px 28px;
                                       border-radius:6px;">
-                                    Mis Cursos Reservados
+                                    Mis cursos reservados
                                 </a>
                             </div>
                         </td>
