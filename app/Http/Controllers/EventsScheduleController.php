@@ -114,6 +114,28 @@ class EventsScheduleController extends Controller
         return response()->json($dates);
     }
 
+    public function getDatesTypeUser()
+    {
+        $dates = EventsSchedule::with('instructor')
+            ->select('id', 'instructor_id', 'event_type', 'reference_id', 'start_date', 'end_date')
+            ->orderBy('start_date', 'asc')
+            ->get()
+            ->map(function ($schedule) {
+                return [
+                    'id' => $schedule->id,
+                    'event_type' => $schedule->event_type,
+                    'reference_id' => $schedule->reference_id,
+                    'start_date' => $schedule->start_date,
+                    'end_date' => $schedule->end_date,
+                    'instructor_id' => $schedule->instructor_id,
+                    'instructor_name' => $schedule->instructor ? $schedule->instructor->name : null,
+                    'collaborator_number' => $schedule->instructor ? $schedule->instructor->collaborator_number : null,
+                ];
+            });
+
+        return response()->json($dates);
+    }
+
     public function show($id)
     {
         try {
@@ -218,18 +240,22 @@ class EventsScheduleController extends Controller
                 'instructor_id' => 'required|exists:users,id',
                 'reference_id'  => 'required|integer',
                 'start_date'    => 'required|date_format:Y-m-d',
+                'end_date'    => 'required|date_format:Y-m-d',
             ], [
                 'instructor_id.required' => 'El master driver es obligatorio.',
                 'instructor_id.exists'   => 'El master driver seleccionado no existe.',
                 'reference_id.required'  => 'El ID de referencia es obligatorio.',
                 'start_date.required'    => 'La fecha de inicio es obligatoria.',
                 'start_date.date_format' => 'La fecha de inicio debe tener el formato AAAA-MM-DD',
+                'end_date.required'    => 'La fecha fin es obligatoria.',
+                'end_date.date_format' => 'La fecha fin debe tener el formato AAAA-MM-DD',
             ]);
 
-            $date = Carbon::parse($validated['start_date']);
+            $startDate = Carbon::createFromFormat('Y-m-d', $validated['start_date'])->startOfDay();
+            $endDate   = Carbon::createFromFormat('Y-m-d', $validated['end_date'])->endOfDay();
 
             $existingSchedulesCount = EventsSchedule::whereIn('event_type', ['curso', 'demo'])
-                ->whereDate('start_date', $date->toDateString())
+                ->whereDate('start_date', $startDate->toDateString())
                 ->count();
 
             if ($existingSchedulesCount >= 3) {
@@ -239,17 +265,25 @@ class EventsScheduleController extends Controller
                 ], 422);
             }
 
-            if ($date->isPast()) {
+            if ($startDate->lt(Carbon::today())) {
                 return response()->json([
                     'success' => false,
                     'error'   => 'No puedes agendar una demo en una fecha pasada.',
                 ], 422);
             }
 
+            if ($endDate->lt($startDate)) {
+                return response()->json([
+                    'success' => false,
+                    'error'   => 'La fecha fin no puede ser anterior a la fecha de inicio.',
+                ], 422);
+            }
+
             $schedule = EventsSchedule::create([
                 'instructor_id' => $validated['instructor_id'],
                 'reference_id'  => $validated['reference_id'],
-                'start_date'    => $validated['start_date'],
+                'start_date'    => $startDate->toDateTimeString(),
+                'end_date'      => $endDate->toDateTimeString(),
                 'event_type'    => 'demo',
             ]);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EventsSchedule;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -212,6 +213,31 @@ class UsersController extends Controller
                 return response()->json(['error' => 'Usuario no encontrado o no es persona física'], 404);
             }
 
+            if ($user->courses()->exists()) {
+                return response()->json([
+                    'error' => 'No se puede editar este usuario porque tiene cursos asignados.'
+                ], 400);
+            }
+
+            if ($user->reservations()->exists()) {
+                return response()->json([
+                    'error' => 'No se puede editar este usuario porque tiene reservas activas.'
+                ], 400);
+            }
+
+            if ($user->favoriteCourses()->exists()) {
+                return response()->json([
+                    'error' => 'No se puede editar este usuario porque tiene cursos marcados como favoritos.'
+                ], 400);
+            }
+
+            $isInstructor = EventsSchedule::where('instructor_id', $user->id)->exists();
+            if ($isInstructor) {
+                return response()->json([
+                    'error' => 'No se puede editar este usuario porque está asignado como instructor en uno o más horarios.'
+                ], 400);
+            }
+
             $validator = Validator::make($request->all(), [
                 'name' => 'sometimes|required|string|max:255',
                 'last_name' => 'sometimes|required|string|max:255',
@@ -294,6 +320,31 @@ class UsersController extends Controller
                 return response()->json([
                     'error' => 'Usuario no encontrado o no es persona moral',
                 ], 404);
+            }
+
+            if ($user->courses()->exists()) {
+                return response()->json([
+                    'error' => 'No se puede editar este usuario porque tiene cursos asignados.'
+                ], 400);
+            }
+
+            if ($user->reservations()->exists()) {
+                return response()->json([
+                    'error' => 'No se puede editar este usuario porque tiene reservas activas.'
+                ], 400);
+            }
+
+            if ($user->favoriteCourses()->exists()) {
+                return response()->json([
+                    'error' => 'No se puede editar este usuario porque tiene cursos marcados como favoritos.'
+                ], 400);
+            }
+
+            $isInstructor = EventsSchedule::where('instructor_id', $user->id)->exists();
+            if ($isInstructor) {
+                return response()->json([
+                    'error' => 'No se puede editar este usuario porque está asignado como instructor en uno o más horarios.'
+                ], 400);
             }
 
             $validator = Validator::make($request->all(), [
@@ -390,6 +441,13 @@ class UsersController extends Controller
             if ($user->favoriteCourses()->exists()) {
                 return response()->json([
                     'error' => 'No se puede eliminar este usuario porque tiene cursos marcados como favoritos.'
+                ], 400);
+            }
+
+            $isInstructor = EventsSchedule::where('instructor_id', $user->id)->exists();
+            if ($isInstructor) {
+                return response()->json([
+                    'error' => 'No se puede eliminar este usuario porque está asignado como instructor en uno o más horarios.'
                 ], 400);
             }
 
