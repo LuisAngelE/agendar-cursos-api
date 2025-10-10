@@ -369,10 +369,28 @@ class UsersController extends Controller
     public function destroy(string $id)
     {
         try {
-            $user = User::find($id);
+            $user = User::with(['courses', 'reservations', 'favoriteCourses'])->findOrFail($id);
 
             if (!$user) {
                 return response()->json(['error' => 'Usuario no encontrado'], 404);
+            }
+
+            if ($user->courses()->exists()) {
+                return response()->json([
+                    'error' => 'No se puede eliminar este usuario porque tiene cursos asignados.'
+                ], 400);
+            }
+
+            if ($user->reservations()->exists()) {
+                return response()->json([
+                    'error' => 'No se puede eliminar este usuario porque tiene reservas activas.'
+                ], 400);
+            }
+
+            if ($user->favoriteCourses()->exists()) {
+                return response()->json([
+                    'error' => 'No se puede eliminar este usuario porque tiene cursos marcados como favoritos.'
+                ], 400);
             }
 
             $user->delete();

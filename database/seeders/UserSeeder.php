@@ -80,7 +80,6 @@ class UserSeeder extends Seeder
                 'email' => 'luisangelem.dp@gmail.com',
                 'type_user' => 1,
                 'type_person' => 5,
-
                 'phone' => '0123456789',
                 'collaborator_number' => null,
                 'birth_date' => null,

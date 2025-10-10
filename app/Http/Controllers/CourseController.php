@@ -208,4 +208,44 @@ class CourseController extends Controller
             ], 500);
         }
     }
+
+    public function enable($id)
+    {
+        try {
+            $course = Course::findOrFail($id);
+
+            if ($course->status == Course::Activo) {
+                return response()->json(['mensaje' => 'El curso ya está habilitado'], 200);
+            }
+
+            $course->update(['status' => Course::Activo]);
+
+            return response()->json(['mensaje' => 'Curso habilitado correctamente', 'curso' => $course], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al habilitar el curso',
+                'mensaje' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function disable($id)
+    {
+        try {
+            $course = Course::findOrFail($id);
+
+            if ($course->status == Course::Inactivo) {
+                return response()->json(['mensaje' => 'El curso ya está deshabilitado'], 200);
+            }
+
+            $course->update(['status' => Course::Inactivo]);
+
+            return response()->json(['mensaje' => 'Curso deshabilitado correctamente', 'curso' => $course], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al deshabilitar el curso',
+                'mensaje' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
