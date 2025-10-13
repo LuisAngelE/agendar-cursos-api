@@ -23,8 +23,20 @@ class CancelReservation extends Mailable
 
     public function build()
     {
-        return $this->from('notificacion@ldrsolutions.com.mx', 'LDR Solutons, Foton')
+        $email = $this->from('notificacion@ldrsolutions.com.mx', 'LDR Solutions, Foton')
             ->subject('Reservación Cancelada')
             ->view('mail.cancelreservation');
+
+        if (!empty($this->reservation->proof_path)) {
+            $filePath = storage_path('app/public/' . $this->reservation->proof_path);
+            if (file_exists($filePath)) {
+                $email->attach($filePath, [
+                    'as' => 'comprobante_cancelacion.' . pathinfo($filePath, PATHINFO_EXTENSION),
+                    'mime' => mime_content_type($filePath),
+                ]);
+            }
+        }
+
+        return $email;
     }
 }

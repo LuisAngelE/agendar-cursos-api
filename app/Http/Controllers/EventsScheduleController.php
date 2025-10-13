@@ -358,6 +358,7 @@ class EventsScheduleController extends Controller
             if ($reservation) {
                 $reservation->update([
                     'course_id' => $validated['course_id'],
+                    'status'    => Reservation::STATUS_PENDING,
                 ]);
             }
 

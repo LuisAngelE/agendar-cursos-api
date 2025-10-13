@@ -30,6 +30,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('status')->default(1);
 
             $table->text('cancellation_reason')->nullable();
+            $table->string('proof_path')->nullable()->after('cancellation_reason');
 
             $table->timestamps();
             $table->softDeletes();

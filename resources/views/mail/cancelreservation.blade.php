@@ -88,6 +88,14 @@
                                         <td>{{ $reservation->cancellation_reason }}</td>
                                     </tr>
                                 @endif
+                                @if ($reservation->proof_path)
+                                    <div style="margin-top:20px; text-align:center;">
+                                        <p><strong>Comprobante de cancelación:</strong></p>
+                                        <img src="{{ asset('storage/' . $reservation->proof_path) }}"
+                                            alt="Comprobante de cancelación" style="max-width:100%; border-radius:6px;">
+                                    </div>
+                                @endif
+
                             </table>
 
                             <div style="text-align:center;">

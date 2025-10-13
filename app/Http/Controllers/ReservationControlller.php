@@ -50,9 +50,14 @@ class ReservationControlller extends Controller
         }
     }
 
-    public function cancelReservation(Request $request,$reservationId)
+    public function cancelReservation(Request $request, $reservationId)
     {
         try {
+            $validated = $request->validate([
+                'motivo' => 'required|string|max:500',
+                'comprobante' => 'nullable|image|max:2048',
+            ]);
+
             $reservation = Reservation::find($reservationId);
 
             if (!$reservation) {
@@ -68,14 +73,22 @@ class ReservationControlller extends Controller
             }
 
             $reservation->status = Reservation::STATUS_CANCELED;
-            $reservation->cancellation_reason = $request->input('motivo');
+            $reservation->cancellation_reason = $validated['motivo'];
+
+            if ($request->hasFile('comprobante')) {
+                $path = $request->file('comprobante')->store('cancelaciones', 'public');
+                $reservation->proof_path = $path;
+            }
+
             $reservation->save();
 
             $url = url('https://testcursos.ldrhumanresources.com');
-
             $schedule = $reservation->schedule;
+
             if ($reservation->student && $reservation->student->email) {
-                Mail::to($reservation->student->email)->send(new CancelReservation($schedule, $reservation, $url));
+                Mail::to($reservation->student->email)->send(
+                    new CancelReservation($schedule, $reservation, $url)
+                );
             }
 
             return response()->json([
