@@ -242,7 +242,7 @@ class EventsScheduleController extends Controller
                 'start_date'    => 'required|date_format:Y-m-d',
                 'end_date'    => 'required|date_format:Y-m-d',
             ], [
-                'instructor_id.required' => 'El master driver es obligatorio.',
+                'instructor_id.required' => 'El master driver es obl igatorio.',
                 'instructor_id.exists'   => 'El master driver seleccionado no existe.',
                 'reference_id.required'  => 'El ID de referencia es obligatorio.',
                 'start_date.required'    => 'La fecha de inicio es obligatoria.',
@@ -253,6 +253,24 @@ class EventsScheduleController extends Controller
 
             $startDate = Carbon::createFromFormat('Y-m-d', $validated['start_date'])->startOfDay();
             $endDate   = Carbon::createFromFormat('Y-m-d', $validated['end_date'])->endOfDay();
+
+            $existingInstructorAssignment = EventsSchedule::where('instructor_id', $validated['instructor_id'])
+                ->where(function ($query) use ($startDate, $endDate) {
+                    $query->whereBetween('start_date', [$startDate, $endDate])
+                        ->orWhereBetween('end_date', [$startDate, $endDate])
+                        ->orWhere(function ($q) use ($startDate, $endDate) {
+                            $q->where('start_date', '<=', $startDate)
+                                ->where('end_date', '>=', $endDate);
+                        });
+                })
+                ->exists();
+
+            if ($existingInstructorAssignment) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Este instructor ya está asignado a un curso o demo en esas fechas.',
+                ], 422);
+            }
 
             $existingSchedulesCount = EventsSchedule::whereIn('event_type', ['curso', 'demo'])
                 ->whereDate('start_date', $startDate->toDateString())
@@ -401,18 +419,30 @@ class EventsScheduleController extends Controller
             ]);
 
             $schedule = EventsSchedule::with('reservations.student', 'course')->findOrFail($scheduleId);
+
             if (!$schedule) {
                 return response()->json(['error' => 'No existe ese horario con ese id.'], 404);
+            }
+
+            $scheduleDate = Carbon::parse($schedule->start_date)->toDateString();
+
+            $existingAssignment = EventsSchedule::where('instructor_id', $validated['instructor_id'])
+                ->whereDate('start_date', $scheduleDate)
+                ->where('id', '<>', $schedule->id)
+                ->exists();
+
+            if ($existingAssignment) {
+                return response()->json([
+                    'error' => 'Este instructor ya está asignado a un curso o demo en esa fecha.',
+                ], 422);
             }
 
             $schedule->instructor_id = $validated['instructor_id'];
             $schedule->save();
 
             $reservation = $schedule->reservations->first();
-
             $url = getBaseUrl();
 
-            // Enviar correo al instructor
             $instructor = $schedule->instructor;
             if ($instructor && $instructor->email) {
                 Mail::to($instructor->email)->send(new Instructor($schedule, $reservation, $url));
