@@ -205,7 +205,7 @@ class EventsScheduleController extends Controller
                 'status'      => Reservation::STATUS_PENDING,
             ]);
 
-            $url = url('https://pic.ldrhumanresources.com/');
+            $url = getBaseUrl();
 
             $courseOwner = $schedule->course->user;
             if ($courseOwner && $courseOwner->email) {
@@ -362,7 +362,7 @@ class EventsScheduleController extends Controller
                 ]);
             }
 
-            $url = url('https://pic.ldrhumanresources.com/');
+            $url = getBaseUrl();
 
             $courseOwner = $schedule->course->user;
             if ($courseOwner && $courseOwner->email) {
@@ -409,7 +409,8 @@ class EventsScheduleController extends Controller
             $schedule->save();
 
             $reservation = $schedule->reservations->first();
-            $url = url('https://pic.ldrhumanresources.com/');
+
+            $url = getBaseUrl();
 
             // Enviar correo al instructor
             $instructor = $schedule->instructor;
