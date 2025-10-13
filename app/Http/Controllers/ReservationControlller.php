@@ -31,7 +31,7 @@ class ReservationControlller extends Controller
             $reservation->status = Reservation::STATUS_CONFIRMED;
             $reservation->save();
 
-            $url = url('https://testcursos.ldrhumanresources.com');
+            $url = url('https://pic.ldrhumanresources.com/');
 
             $schedule = $reservation->schedule;
             if ($reservation->student && $reservation->student->email) {
@@ -82,7 +82,7 @@ class ReservationControlller extends Controller
 
             $reservation->save();
 
-            $url = url('https://testcursos.ldrhumanresources.com');
+            $url = url('https://pic.ldrhumanresources.com/');
             $schedule = $reservation->schedule;
 
             if ($reservation->student && $reservation->student->email) {
@@ -156,7 +156,7 @@ class ReservationControlller extends Controller
             $reservation->status = Reservation::STATUS_CONFIRMED;
             $reservation->save();
 
-            $url = url('https://testcursos.ldrhumanresources.com');
+            $url = url('https://pic.ldrhumanresources.com/');
 
             $schedule = $reservation->schedule;
             if ($reservation->student && $reservation->student->email) {
