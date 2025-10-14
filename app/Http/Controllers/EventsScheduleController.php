@@ -114,11 +114,20 @@ class EventsScheduleController extends Controller
         return response()->json($dates);
     }
 
-    public function getDatesTypeUser()
+    public function getDatesTypeUser($id)
     {
         $dates = EventsSchedule::with('instructor')
             ->select('id', 'instructor_id', 'event_type', 'reference_id', 'start_date', 'end_date')
             ->orderBy('start_date', 'asc')
+            ->where(function ($query) use ($id) {
+                $query->where('instructor_id', $id)
+                    ->orWhereHas('course', function ($subQuery) use ($id) {
+                        $subQuery->where('instructor_id', $id);
+                    })
+                    ->orWhereHas('reservations', function ($subQuery) use ($id) {
+                        $subQuery->where('student_id', $id);
+                    });
+            })
             ->get()
             ->map(function ($schedule) {
                 return [

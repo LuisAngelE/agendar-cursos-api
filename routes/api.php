@@ -32,6 +32,7 @@ Route::get('/coursePublic', [CourseController::class, 'index']);
 
 //Endpoind Fechas en Events
 Route::get('/course-schedules/dates', [EventsScheduleController::class, 'getDates']);
+Route::get('/course-schedules/dates/{userId}', [EventsScheduleController::class, 'getDatesTypeUser']);
 Route::post('/storeDemo', [EventsScheduleController::class, 'storeDemo']);
 
 Route::middleware('auth:sanctum')->group(function () {
