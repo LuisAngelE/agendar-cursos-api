@@ -242,6 +242,91 @@ class EventsScheduleController extends Controller
         }
     }
 
+    public function storeByAdmin(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'course_id'       => 'required|exists:courses,id',
+                'state_id'        => 'required|exists:states,id',
+                'municipality_id' => 'required|exists:municipalities,id',
+                'start_date'      => 'required|date_format:Y-m-d H:i:s',
+                'location'        => 'required|string|max:255',
+                'name'            => 'required|string|max:255',
+                'email'           => 'nullable|email|max:255',
+                'phone'           => 'nullable|string|max:20',
+            ], [
+                'course_id.required'       => 'El ID del curso es obligatorio.',
+                'course_id.exists'         => 'El curso seleccionado no existe.',
+                'state_id.required'        => 'El estado es obligatorio.',
+                'state_id.exists'          => 'El estado seleccionado no existe.',
+                'municipality_id.required' => 'El municipio es obligatorio.',
+                'municipality_id.exists'   => 'El municipio seleccionado no existe.',
+                'start_date.required'      => 'La fecha de inicio es obligatoria.',
+                'start_date.date_format'   => 'La fecha de inicio debe tener el formato AAAA-MM-DD HH:MM:SS.',
+                'location.required'        => 'La ubicación es obligatoria.',
+                'location.string'          => 'La ubicación debe ser una cadena de texto.',
+                'location.max'             => 'La ubicación no debe exceder los 255 caracteres.',
+                'name.required'            => 'El nombre del cliente es obligatorio.',
+            ]);
+
+            $date = Carbon::parse($validated['start_date']);
+
+            $existingSchedulesCount  = EventsSchedule::where('course_id', $validated['course_id'])
+                ->whereDate('start_date', $date->toDateString())
+                ->count();
+
+            if ($existingSchedulesCount >= 3) {
+                return response()->json([
+                    'success' => false,
+                    'error'   => 'Solo se pueden registrar hasta 3 horarios para este curso en la misma fecha.',
+                ], 422);
+            }
+
+            if ($date->isPast()) {
+                return response()->json([
+                    'success' => false,
+                    'error'   => 'No puedes agendar en una fecha pasada.'
+                ], 422);
+            }
+
+            $schedule = EventsSchedule::create(array_merge(
+                $validated,
+                [
+                    'event_type'   => 'curso',
+                    'reference_id' => $validated['course_id'],
+                ]
+            ));
+
+            $reservation = Reservation::create([
+                'name'  => $validated['name'],
+                'email' => $validated['email'] ?? null,
+                'phone' => $validated['phone'] ?? null,
+                'course_id'   => $validated['course_id'],
+                'schedule_id' => $schedule->id,
+                'status'      => Reservation::STATUS_PENDING,
+            ]);
+
+            return response()->json([
+                'success'     => true,
+                'mensaje'     => 'Horario y reserva para invitado creados correctamente.',
+                'schedule'    => $schedule,
+                'reservation' => $reservation,
+            ], 201);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success'  => false,
+                'error'    => 'Error de validación.',
+                'errors'   => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error'   => 'Error al crear el horario y reserva.',
+                'mensaje' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function storeDemo(Request $request)
     {
         try {

@@ -52,6 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/courseSchedule/{id}/edit', [EventsScheduleController::class, 'update']);
     Route::get('/indexCount', [EventsScheduleController::class, 'indexCount']);
     Route::get('/indexTypeUserAgendaCount/{id}', [EventsScheduleController::class, 'indexTypeUserAgendaCount']);
+    Route::post('/storeByAdmin', [EventsScheduleController::class, 'storeByAdmin']);
     Route::resource('/courseSchedule', EventsScheduleController::class);
 
     //Status Reservas
