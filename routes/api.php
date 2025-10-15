@@ -21,6 +21,7 @@ Route::get('/users/fisicas', [UsersController::class, 'indexFisicas']);
 Route::post('/store/fisicas', [UsersController::class, 'storeFisica']);
 Route::post('/update/fisicas/{id}', [UsersController::class, 'updateFisica']);
 
+Route::get('/users/clients', [UsersController::class, 'indexClients']);
 Route::get('/users/morales', [UsersController::class, 'indexMorales']);
 Route::post('/store/morales', [UsersController::class, 'storeMorales']);
 Route::post('/update/morales/{id}', [UsersController::class, 'updateMorales']);

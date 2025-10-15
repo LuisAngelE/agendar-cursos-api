@@ -185,10 +185,10 @@ class EventsScheduleController extends Controller
                 ->whereDate('start_date', $date->toDateString())
                 ->count();
 
-            if ($existingSchedulesCount >= 3) {
+            if ($existingSchedulesCount >= 6) {
                 return response()->json([
                     'success' => false,
-                    'error'   => 'Solo se pueden registrar hasta 3 horarios para este curso en la misma fecha.',
+                    'error'   => 'Solo se pueden registrar hasta 6 horarios para este curso en la misma fecha.',
                 ], 422);
             }
 
@@ -247,16 +247,16 @@ class EventsScheduleController extends Controller
         try {
             $validated = $request->validate([
                 'course_id'       => 'required|exists:courses,id',
+                'student_id'      => 'required|exists:users,id',
                 'state_id'        => 'required|exists:states,id',
                 'municipality_id' => 'required|exists:municipalities,id',
                 'start_date'      => 'required|date_format:Y-m-d H:i:s',
                 'location'        => 'required|string|max:255',
-                'name'            => 'required|string|max:255',
-                'email'           => 'nullable|email|max:255',
-                'phone'           => 'nullable|string|max:20',
             ], [
                 'course_id.required'       => 'El ID del curso es obligatorio.',
                 'course_id.exists'         => 'El curso seleccionado no existe.',
+                'student_id.required'       => 'El ID del cliente es obligatorio.',
+                'student_id.exists'         => 'El cliente seleccionado no existe.',
                 'state_id.required'        => 'El estado es obligatorio.',
                 'state_id.exists'          => 'El estado seleccionado no existe.',
                 'municipality_id.required' => 'El municipio es obligatorio.',
@@ -266,7 +266,6 @@ class EventsScheduleController extends Controller
                 'location.required'        => 'La ubicación es obligatoria.',
                 'location.string'          => 'La ubicación debe ser una cadena de texto.',
                 'location.max'             => 'La ubicación no debe exceder los 255 caracteres.',
-                'name.required'            => 'El nombre del cliente es obligatorio.',
             ]);
 
             $date = Carbon::parse($validated['start_date']);
@@ -275,10 +274,10 @@ class EventsScheduleController extends Controller
                 ->whereDate('start_date', $date->toDateString())
                 ->count();
 
-            if ($existingSchedulesCount >= 3) {
+            if ($existingSchedulesCount >= 6) {
                 return response()->json([
                     'success' => false,
-                    'error'   => 'Solo se pueden registrar hasta 3 horarios para este curso en la misma fecha.',
+                    'error'   => 'Solo se pueden registrar hasta 6 horarios para este curso en la misma fecha.',
                 ], 422);
             }
 
@@ -298,10 +297,8 @@ class EventsScheduleController extends Controller
             ));
 
             $reservation = Reservation::create([
-                'name'  => $validated['name'],
-                'email' => $validated['email'] ?? null,
-                'phone' => $validated['phone'] ?? null,
                 'course_id'   => $validated['course_id'],
+                'student_id'   => $validated['student_id'],
                 'schedule_id' => $schedule->id,
                 'status'      => Reservation::STATUS_PENDING,
             ]);
@@ -450,10 +447,10 @@ class EventsScheduleController extends Controller
                 ->where('id', '!=', $schedule->id)
                 ->count();
 
-            if ($existingSchedulesCount >= 3) {
+            if ($existingSchedulesCount >= 6) {
                 return response()->json([
                     'success' => false,
-                    'error'   => 'Solo se pueden registrar hasta 3 horarios para este curso en la misma fecha.',
+                    'error'   => 'Solo se pueden registrar hast 6 horarios para este curso en la misma fecha.',
                 ], 422);
             }
 
@@ -518,16 +515,19 @@ class EventsScheduleController extends Controller
                 return response()->json(['error' => 'No existe ese horario con ese id.'], 404);
             }
 
-            $scheduleDate = Carbon::parse($schedule->start_date)->toDateString();
+            $startDate = \Carbon\Carbon::parse($schedule->start_date);
+            $fecha = $startDate->toDateString();
+            $hora = $startDate->format('H');
 
             $existingAssignment = EventsSchedule::where('instructor_id', $validated['instructor_id'])
-                ->whereDate('start_date', $scheduleDate)
                 ->where('id', '<>', $schedule->id)
+                ->whereDate('start_date', $fecha)
+                ->whereRaw("HOUR(start_date) = ?", [$hora])
                 ->exists();
 
             if ($existingAssignment) {
                 return response()->json([
-                    'error' => 'Este instructor ya está asignado a un curso o demo en esa fecha.',
+                    'error' => 'Este instructor ya está asignado a un curso o demo en este día y hora.',
                 ], 422);
             }
 

@@ -40,6 +40,16 @@ class UsersController extends Controller
         ], 200);
     }
 
+    public function indexClients()
+    {
+        $fisicas = User::where('type_user', 3)->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $fisicas,
+        ], 200);
+    }
+
     public function instructores()
     {
         $instructores = User::where('type_user', 2)->get();
