@@ -61,11 +61,14 @@
                                 </tr>
                                 <tr>
                                     <td style="padding:5px 0;"><strong>Solicitante:</strong></td>
-                                    <td>{{ $reservation->student->name ?? 'Usuario' }}</td>
+                                    <td>
+                                        {{ $reservation->student->razon_social ?? $reservation->student->name . ' ' . $reservation->student->last_name }}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td style="padding:5px 0;"><strong>Instructor:</strong></td>
-                                    <td>{{ $schedule->instructor->name, $schedule->instructor->last_name ?? 'Por asignar' }}
+                                    <td>
+                                        {{ $schedule->instructor->razon_social ?? $schedule->instructor->name . ' ' . $schedule->instructor->last_name }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -87,9 +90,9 @@
                             <div style="text-align:center;">
                                 <a href="{{ $url }}"
                                     style="display:inline-block; background:#F05E29; color:#ffffff;
-                                          font-size:16px; font-weight:bold;
-                                          text-decoration:none; padding:14px 28px;
-                                          border-radius:6px;">
+                        font-size:16px; font-weight:bold;
+                        text-decoration:none; padding:14px 28px;
+                        border-radius:6px;">
                                     Mis cursos reservados
                                 </a>
                             </div>

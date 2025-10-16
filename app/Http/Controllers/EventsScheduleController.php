@@ -94,20 +94,52 @@ class EventsScheduleController extends Controller
 
     public function getDates()
     {
-        $dates = EventsSchedule::with('instructor')
-            ->select('id', 'instructor_id', 'event_type', 'reference_id', 'start_date', 'end_date')
+        $dates = EventsSchedule::with([
+            'instructor',
+            'course',
+            'reservations.student',
+            'state',
+            'municipality'
+        ])
+            ->select(
+                'id',
+                'instructor_id',
+                'course_id',
+                'event_type',
+                'reference_id',
+                'start_date',
+                'end_date',
+                'state_id',
+                'municipality_id'
+            )
             ->orderBy('start_date', 'asc')
             ->get()
             ->map(function ($schedule) {
+                $firstReservation = $schedule->reservations->first();
+
                 return [
                     'id' => $schedule->id,
                     'event_type' => $schedule->event_type,
                     'reference_id' => $schedule->reference_id,
                     'start_date' => $schedule->start_date,
                     'end_date' => $schedule->end_date,
+
                     'instructor_id' => $schedule->instructor_id,
-                    'instructor_name' => $schedule->instructor ? $schedule->instructor->name : null,
-                    'collaborator_number' => $schedule->instructor ? $schedule->instructor->collaborator_number : null,
+                    'instructor_name' => $schedule->instructor?->name,
+                    'instructor_last_name' => $schedule->instructor?->last_name,
+                    'collaborator_number' => $schedule->instructor?->collaborator_number,
+
+                    'course_title' => $schedule->course?->title,
+                    'course_status' => $schedule->course?->status,
+
+                    'client_id' => $firstReservation?->student_id,
+                    'client_name' => $firstReservation?->student?->name,
+                    'client_last_name' => $firstReservation?->student?->last_name,
+                    'client_razon_social' => $firstReservation?->student?->razon_social,
+                    'client_phone' => $firstReservation?->student?->phone,
+
+                    'state_name' => $schedule->state?->name,
+                    'municipality_name' => $schedule->municipality?->name,
                 ];
             });
 
@@ -116,8 +148,24 @@ class EventsScheduleController extends Controller
 
     public function getDatesTypeUser($id)
     {
-        $dates = EventsSchedule::with('instructor')
-            ->select('id', 'instructor_id', 'event_type', 'reference_id', 'start_date', 'end_date')
+        $dates = EventsSchedule::with([
+            'instructor',
+            'course',
+            'reservations.student',
+            'state',
+            'municipality'
+        ])
+            ->select(
+                'id',
+                'instructor_id',
+                'course_id',
+                'event_type',
+                'reference_id',
+                'start_date',
+                'end_date',
+                'state_id',
+                'municipality_id'
+            )
             ->orderBy('start_date', 'asc')
             ->where(function ($query) use ($id) {
                 $query->where('instructor_id', $id)
@@ -130,15 +178,31 @@ class EventsScheduleController extends Controller
             })
             ->get()
             ->map(function ($schedule) {
+                $firstReservation = $schedule->reservations->first();
+
                 return [
                     'id' => $schedule->id,
                     'event_type' => $schedule->event_type,
                     'reference_id' => $schedule->reference_id,
                     'start_date' => $schedule->start_date,
                     'end_date' => $schedule->end_date,
+
                     'instructor_id' => $schedule->instructor_id,
-                    'instructor_name' => $schedule->instructor ? $schedule->instructor->name : null,
-                    'collaborator_number' => $schedule->instructor ? $schedule->instructor->collaborator_number : null,
+                    'instructor_name' => $schedule->instructor?->name,
+                    'instructor_last_name' => $schedule->instructor?->last_name,
+                    'collaborator_number' => $schedule->instructor?->collaborator_number,
+
+                    'course_title' => $schedule->course?->title,
+                    'course_status' => $schedule->course?->status,
+
+                    'client_id' => $firstReservation?->student_id,
+                    'client_name' => $firstReservation?->student?->name,
+                    'client_last_name' => $firstReservation?->student?->last_name,
+                    'client_razon_social' => $firstReservation?->student?->razon_social,
+                    'client_phone' => $firstReservation?->student?->phone,
+
+                    'state_name' => $schedule->state?->name,
+                    'municipality_name' => $schedule->municipality?->name,
                 ];
             });
 

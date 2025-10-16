@@ -30,7 +30,7 @@
                                 style="font-size:20px; margin:0 0 15px 0; color:#333; font-weight:normal; line-height:1.4;">
                                 Buen día estimado(a): <br>
                                 <span style="color:#F05E29; font-weight:bold;">
-                                    {{ $user->name }} {{ $user->last_name }}
+                                    {{ $user->razon_social ?? $user->name . ' ' . $user->last_name }}
                                 </span>
                             </h2>
 

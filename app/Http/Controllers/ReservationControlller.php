@@ -38,6 +38,10 @@ class ReservationControlller extends Controller
                 Mail::to($reservation->student->email)->send(new ConfirmReservation($schedule, $reservation, $url));
             }
 
+            if ($schedule && $schedule->instructor && $schedule->instructor->email) {
+                Mail::to($schedule->instructor->email)->send(new ConfirmReservation($schedule, $reservation, $url));
+            }
+
             return response()->json([
                 'mensaje' => 'Reserva confirmada correctamente.',
                 'reserva' => $reservation,

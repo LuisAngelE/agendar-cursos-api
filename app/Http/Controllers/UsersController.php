@@ -52,7 +52,9 @@ class UsersController extends Controller
 
     public function instructores()
     {
-        $instructores = User::where('type_user', 2)->get();
+        $instructores = User::whereIn('type_user', [1, 2])
+            ->where('type_person', 4)
+            ->get();
 
         return response()->json([
             'success' => true,
