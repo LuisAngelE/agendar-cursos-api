@@ -66,7 +66,9 @@
                                 </tr>
                                 <tr>
                                     <td style="padding:5px 0;"><strong>Instructor:</strong></td>
-                                    <td>{{ $schedule->instructor->razon_social ?? $schedule->instructor->name . ' ' . $schedule->instructor->last_name }}
+                                    <td>
+                                        {{ $schedule->instructor?->razon_social ??
+                                            ($schedule->instructor?->name . ' ' . $schedule->instructor?->last_name ?? 'Instructor no definido') }}
                                     </td>
                                 </tr>
                                 <tr>
