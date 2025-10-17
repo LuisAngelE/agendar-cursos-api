@@ -15,8 +15,9 @@ class CreateModelsTable extends Migration
     {
         Schema::create('models', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->text('description')->nullable();
+            $table->string('nombre_tipo_unidad');
+            $table->string('nombre_modelo');
+            $table->string('nombre_producto');
             $table->timestamps();
             $table->softDeletes();
         });

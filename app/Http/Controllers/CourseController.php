@@ -88,6 +88,7 @@ class CourseController extends Controller
             $validated = $request->validate([
                 'instructor_id' => 'nullable|exists:users,id',
                 'category_id' => 'required|exists:categories,id',
+                'model_id' => 'required|exists:models,id',
                 'title' => 'required|string|max:255',
                 'description' => 'required|string',
                 'modality' => 'required|string|max:50',
@@ -97,6 +98,8 @@ class CourseController extends Controller
                 'instructor_id.exists' => 'El instructor no existe',
                 'category_id.required' => 'La categoría es obligatoria',
                 'category_id.exists' => 'La categoría no existe',
+                'model_id.required' => 'El modelo es obligatorio',
+                'model_id.exists' => 'El modelo no existe',
                 'title.required' => 'El título es obligatorio',
                 'title.max' => 'El título no puede tener más de 255 caracteres',
                 'description.required' => 'La descripción es obligatoria',
@@ -146,6 +149,7 @@ class CourseController extends Controller
             $validated = $request->validate([
                 'instructor_id' => 'nullable|exists:users,id',
                 'category_id' => 'required|exists:categories,id',
+                'model_id' => 'required|exists:models,id',
                 'title' => 'required|string|max:255',
                 'description' => 'required|string',
                 'modality' => 'required|string|max:50',
@@ -155,6 +159,8 @@ class CourseController extends Controller
                 'instructor_id.exists' => 'El instructor no existe',
                 'category_id.required' => 'La categoría es obligatoria',
                 'category_id.exists' => 'La categoría no existe',
+                'model_id.required' => 'El modelo es obligatorio',
+                'model_id.exists' => 'El modelo no existe',
                 'title.required' => 'El título es obligatorio',
                 'title.max' => 'El título no puede tener más de 255 caracteres',
                 'description.required' => 'La descripción es obligatoria',

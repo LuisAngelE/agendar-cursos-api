@@ -7,6 +7,7 @@ use App\Http\Controllers\EventsScheduleController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\GraphicsController;
 use App\Http\Controllers\ImageCourseController;
+use App\Http\Controllers\ModelsController;
 use App\Http\Controllers\ReservationControlller;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\UsersController;
@@ -39,6 +40,9 @@ Route::post('/storeDemo', [EventsScheduleController::class, 'storeDemo']);
 Route::middleware('auth:sanctum')->group(function () {
     //Categorías
     Route::resource('/categories', CategoriesController::class);
+
+    //Modelos
+    Route::resource('/modelos', ModelsController::class);
 
     //Cursos
     Route::resource('/course', CourseController::class);
