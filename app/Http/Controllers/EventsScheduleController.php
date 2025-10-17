@@ -130,13 +130,13 @@ class EventsScheduleController extends Controller
                     'collaborator_number' => $schedule->instructor?->collaborator_number,
 
                     'course_title' => $schedule->course?->title,
-                    'course_status' => $schedule->course?->status,
 
                     'client_id' => $firstReservation?->student_id,
                     'client_name' => $firstReservation?->student?->name,
                     'client_last_name' => $firstReservation?->student?->last_name,
                     'client_razon_social' => $firstReservation?->student?->razon_social,
                     'client_phone' => $firstReservation?->student?->phone,
+                    'course_status' => $firstReservation?->status,
 
                     'state_name' => $schedule->state?->name,
                     'municipality_name' => $schedule->municipality?->name,
@@ -193,13 +193,13 @@ class EventsScheduleController extends Controller
                     'collaborator_number' => $schedule->instructor?->collaborator_number,
 
                     'course_title' => $schedule->course?->title,
-                    'course_status' => $schedule->course?->status,
 
                     'client_id' => $firstReservation?->student_id,
                     'client_name' => $firstReservation?->student?->name,
                     'client_last_name' => $firstReservation?->student?->last_name,
                     'client_razon_social' => $firstReservation?->student?->razon_social,
                     'client_phone' => $firstReservation?->student?->phone,
+                    'course_status' => $firstReservation?->status,
 
                     'state_name' => $schedule->state?->name,
                     'municipality_name' => $schedule->municipality?->name,
