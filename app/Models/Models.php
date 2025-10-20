@@ -10,9 +10,8 @@ class Models extends Model
     use HasFactory;
 
     protected $fillable = [
+        'nombre_segmento',
         'nombre_tipo_unidad',
-        'nombre_modelo',
-        'nombre_producto'
     ];
 
     protected $dates = ['deleted_at'];

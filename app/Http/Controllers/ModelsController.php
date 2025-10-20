@@ -38,13 +38,11 @@ class ModelsController extends Controller
     {
         try {
             $validated = $request->validate([
+                'nombre_segmento' => 'required|string|max:255',
                 'nombre_tipo_unidad' => 'required|string|max:255',
-                'nombre_modelo' => 'required|string|max:255',
-                'nombre_producto' => 'required|string|max:255',
             ], [
-                'nombre_tipo_unidad.required' => 'El nombre del tipo de unidad es obligatorio',
-                'nombre_modelo.required' => 'El nombre del modelo es obligatorio',
-                'nombre_producto.required' => 'El nombre del producto es obligatorio',
+                'nombre_tipo_unidad.required' => 'El nombre del segmento es obligatorio',
+                'nombre_modelo.required' => 'El nombre de tipo unidad es obligatorio',
             ]);
 
             $model = Models::create($validated);
@@ -79,13 +77,11 @@ class ModelsController extends Controller
             }
 
             $validated = $request->validate([
+                'nombre_segmento' => 'required|string|max:255',
                 'nombre_tipo_unidad' => 'required|string|max:255',
-                'nombre_modelo' => 'required|string|max:255' . $model->id,
-                'nombre_producto' => 'required|string|max:255',
             ], [
-                'nombre_tipo_unidad.required' => 'El nombre del tipo de unidad es obligatorio',
-                'nombre_modelo.required' => 'El nombre del modelo es obligatorio',
-                'nombre_producto.required' => 'El nombre del producto es obligatorio',
+                'nombre_tipo_unidad.required' => 'El nombre del segmento es obligatorio',
+                'nombre_modelo.required' => 'El nombre de tipo unidad es obligatorio',
             ]);
 
             $model->update($validated);
