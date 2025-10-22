@@ -22,19 +22,15 @@
                             <div style="height:1px;background:#ddd;margin:20px 0;"></div>
                         </td>
                     </tr> --}}
-
-                    <td align="center" style="padding:20px; background:#fff;">
-                        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
-                            <tr>
-                                <td align="center">
-                                    <img src="{{ asset('images/foton.png') }}" alt="LDR Solutions" width="150"
-                                        style="width:100%; max-width:150px; height:auto; display:block;">
-                                </td>
-                            </tr>
-                        </table>
-                        <div style="height:1px; background:#ddd; margin:20px 0;"></div>
-                    </td>
                     
+                    <tr>
+                        <td align="center" style="padding:20px; background:#fff;">
+                            <img src="{{ asset('images/foton.png') }}" alt="LDR Solutions" width="150"
+                                style="width:100%; max-width:150px; height:auto; display:block; margin:0 auto; font-family: Arial, sans-serif; color:#333;">
+                            <div style="height:1px; background:#ddd; margin:20px 0;"></div>
+                        </td>
+                    </tr>
+
                     <tr>
                         <td style="padding:20px;">
                             <h2
