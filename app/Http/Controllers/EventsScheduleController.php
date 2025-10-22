@@ -244,6 +244,7 @@ class EventsScheduleController extends Controller
             ]);
 
             $date = Carbon::parse($validated['start_date']);
+            $now  = Carbon::now();
 
             $existingSchedulesCount  = EventsSchedule::where('course_id', $validated['course_id'])
                 ->whereDate('start_date', $date->toDateString())
@@ -256,10 +257,18 @@ class EventsScheduleController extends Controller
                 ], 422);
             }
 
-            if ($date->isPast()) {
+            if ($date->lt($now)) {
                 return response()->json([
                     'success' => false,
-                    'error'   => 'No puedes agendar en una fecha pasada.'
+                    'error' => 'No puedes agendar en una fecha u hora pasada.'
+                ], 422);
+            }
+
+            $oneHourLater = $now->copy()->addHour();
+            if ($date->lt($oneHourLater)) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'No puedes agendar dentro de la próxima hora.'
                 ], 422);
             }
 
@@ -333,6 +342,7 @@ class EventsScheduleController extends Controller
             ]);
 
             $date = Carbon::parse($validated['start_date']);
+            $now  = Carbon::now();
 
             $existingSchedulesCount  = EventsSchedule::where('course_id', $validated['course_id'])
                 ->whereDate('start_date', $date->toDateString())
@@ -345,10 +355,18 @@ class EventsScheduleController extends Controller
                 ], 422);
             }
 
-            if ($date->isPast()) {
+            if ($date->lt($now)) {
                 return response()->json([
                     'success' => false,
-                    'error'   => 'No puedes agendar en una fecha pasada.'
+                    'error' => 'No puedes agendar en una fecha u hora pasada.'
+                ], 422);
+            }
+
+            $oneHourLater = $now->copy()->addHour();
+            if ($date->lt($oneHourLater)) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'No puedes agendar dentro de la próxima hora.'
                 ], 422);
             }
 
@@ -505,6 +523,7 @@ class EventsScheduleController extends Controller
 
             $schedule = EventsSchedule::findOrFail($id);
             $date = Carbon::parse($validated['start_date']);
+            $now  = Carbon::now();
 
             $existingSchedulesCount = EventsSchedule::where('course_id', $validated['course_id'])
                 ->whereDate('start_date', $date->toDateString())
@@ -518,10 +537,18 @@ class EventsScheduleController extends Controller
                 ], 422);
             }
 
-            if ($date->isPast()) {
+            if ($date->lt($now)) {
                 return response()->json([
                     'success' => false,
-                    'error'   => 'No puedes actualizar a una fecha pasada.',
+                    'error' => 'No puedes agendar en una fecha u hora pasada.'
+                ], 422);
+            }
+
+            $oneHourLater = $now->copy()->addHour();
+            if ($date->lt($oneHourLater)) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'No puedes agendar dentro de la próxima hora.'
                 ], 422);
             }
 

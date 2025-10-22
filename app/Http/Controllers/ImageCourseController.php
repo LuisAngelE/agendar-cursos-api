@@ -71,4 +71,35 @@ class ImageCourseController extends Controller
             ], 500);
         }
     }
+
+    public function deleteCourseImage($courseId, $imageId)
+    {
+        try {
+            $course = Course::findOrFail($courseId);
+            $image = $course->images()->where('id', $imageId)->firstOrFail();
+
+            $path = str_replace('storage/', '', parse_url($image->url, PHP_URL_PATH));
+
+            if (Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
+            }
+
+            $image->delete();
+
+            return response()->json([
+                'message' => 'Imagen eliminada correctamente',
+                'image_id' => $imageId
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Curso o imagen no encontrada',
+                'message' => $e->getMessage()
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al eliminar la imagen',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

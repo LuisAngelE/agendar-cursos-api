@@ -48,6 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('/course', CourseController::class);
     Route::get('/indexTypeUserCourse/{id}', [CourseController::class, 'indexTypeUserCourse']);
     Route::post('/courses/{id}/images', [ImageCourseController::class, 'courseImageUpload']);
+    Route::delete('/courses/{courseId}/images/{imageId}', [ImageCourseController::class, 'deleteCourseImage']);
     Route::put('/courses/{id}/enable', [CourseController::class, 'enable']);
     Route::put('/courses/{id}/disable', [CourseController::class, 'disable']);
 

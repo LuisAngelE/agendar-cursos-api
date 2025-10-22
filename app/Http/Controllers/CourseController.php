@@ -23,6 +23,10 @@ class CourseController extends Controller
                 $query->where('category_id', $request->category_id);
             }
 
+            if ($request->has('model_id') && !empty($request->model_id)) {
+                $query->where('model_id', $request->model_id);
+            }
+
             $courses = $query->get();
 
             $courses = $courses->map(function ($course) {
@@ -53,6 +57,10 @@ class CourseController extends Controller
 
             if ($request->has('category_id') && !empty($request->category_id)) {
                 $query->where('category_id', $request->category_id);
+            }
+
+            if ($request->has('model_id') && !empty($request->model_id)) {
+                $query->where('model_id', $request->model_id);
             }
 
             $courses = $query->get()->map(function ($course) {
