@@ -16,10 +16,9 @@
                     style="background:#ffffff; border-radius:8px; overflow:hidden;">
 
                     <tr>
-                        <td align="center" style="padding:20px; background:#fff;">
-                            <img src="{{ asset('images/foton.png') }}" alt="LDR Solutions"
-                                style="max-width:150px; height:auto; display:block; margin:0 auto;">
-                            <div style="height:1px;background:#ddd;margin:20px 0;"></div>
+                        <td align="center" style="background:#ffffff; padding:20px;">
+                            <img src="{{ asset('images/foton.png') }}" alt="LDR Solutions" width="150"
+                                style="display:block; max-width:150px; width:100%; height:auto; border:0; outline:none; text-decoration:none;">
                         </td>
                     </tr>
 
