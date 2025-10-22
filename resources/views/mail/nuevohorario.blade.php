@@ -15,14 +15,26 @@
                 <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0"
                     style="background:#ffffff; border-radius:8px; overflow:hidden;">
 
-                    <tr>
+                    {{-- <tr>
                         <td align="center" style="padding:20px; background:#fff;">
-                            <img src="{{ asset('images/FOTON.png') }}" alt="LDR Solutions"
+                            <img src="{{ asset('images/foton.png') }}" alt="LDR Solutions"
                                 style="max-width:150px; height:auto; display:block; margin:0 auto;">
                             <div style="height:1px;background:#ddd;margin:20px 0;"></div>
                         </td>
-                    </tr>
+                    </tr> --}}
 
+                    <td align="center" style="padding:20px; background:#fff;">
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                            <tr>
+                                <td align="center">
+                                    <img src="{{ asset('images/foton.png') }}" alt="LDR Solutions" width="150"
+                                        style="width:100%; max-width:150px; height:auto; display:block;">
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="height:1px; background:#ddd; margin:20px 0;"></div>
+                    </td>
+                    
                     <tr>
                         <td style="padding:20px;">
                             <h2
