@@ -126,14 +126,16 @@ class EventsScheduleController extends Controller
 
                     'instructor_id' => $schedule->instructor_id,
                     'instructor_name' => $schedule->instructor?->name,
-                    'instructor_last_name' => $schedule->instructor?->last_name,
+                    'instructor_first_last_name' => $schedule->instructor?->first_last_name,
+                    'instructor_second_last_name' => $schedule->instructor?->second_last_name,
                     'collaborator_number' => $schedule->instructor?->collaborator_number,
 
                     'course_title' => $schedule->course?->title,
 
                     'client_id' => $firstReservation?->student_id,
                     'client_name' => $firstReservation?->student?->name,
-                    'client_last_name' => $firstReservation?->student?->last_name,
+                    'client_first_last_name' => $firstReservation?->student?->first_last_name,
+                    'client_second_last_name' => $firstReservation?->student?->second_last_name,
                     'client_razon_social' => $firstReservation?->student?->razon_social,
                     'client_phone' => $firstReservation?->student?->phone,
                     'course_status' => $firstReservation?->status,
@@ -189,14 +191,16 @@ class EventsScheduleController extends Controller
 
                     'instructor_id' => $schedule->instructor_id,
                     'instructor_name' => $schedule->instructor?->name,
-                    'instructor_last_name' => $schedule->instructor?->last_name,
+                    'instructor_first_last_name' => $schedule->instructor?->first_last_name,
+                    'instructor_second_last_name' => $schedule->instructor?->second_last_name,
                     'collaborator_number' => $schedule->instructor?->collaborator_number,
 
                     'course_title' => $schedule->course?->title,
 
                     'client_id' => $firstReservation?->student_id,
                     'client_name' => $firstReservation?->student?->name,
-                    'client_last_name' => $firstReservation?->student?->last_name,
+                    'client_first_last_name' => $firstReservation?->student?->first_last_name,
+                    'client_second_last_name' => $firstReservation?->student?->second_last_name,
                     'client_razon_social' => $firstReservation?->student?->razon_social,
                     'client_phone' => $firstReservation?->student?->phone,
                     'course_status' => $firstReservation?->status,

@@ -67,7 +67,8 @@ class UsersController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
+                'first_last_name' => 'required|string|max:255',
+                'second_last_name' => 'required|string|max:255',
                 'birth_date' => 'required|date',
                 'curp' => 'required|string|max:18|unique:users,curp',
                 'rfc' => 'required|string|max:13|unique:users,rfc',
@@ -79,8 +80,10 @@ class UsersController extends Controller
             ], [
                 'name.required' => 'El nombre es obligatorio.',
                 'name.max' => 'El nombre no puede tener más de 255 caracteres.',
-                'last_name.required' => 'El apellido es obligatorio.',
-                'last_name.max' => 'El apellido no puede tener más de 255 caracteres.',
+                'first_last_name.required' => 'El apellido es obligatorio.',
+                'first_last_name.max' => 'El apellido no puede tener más de 255 caracteres.',
+                'second_last_name.required' => 'El apellido es obligatorio.',
+                'second_last_name.max' => 'El apellido no puede tener más de 255 caracteres.',
                 'birth_date.required' => 'La fecha de nacimiento es obligatoria.',
                 'birth_date.date' => 'La fecha de nacimiento no es válida.',
                 'curp.required' => 'La CURP es obligatoria.',
@@ -109,7 +112,8 @@ class UsersController extends Controller
 
             $data = $request->only([
                 'name',
-                'last_name',
+                'first_last_name',
+                'second_last_name',
                 'birth_date',
                 'curp',
                 'rfc',
@@ -252,7 +256,8 @@ class UsersController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'name' => 'sometimes|required|string|max:255',
-                'last_name' => 'sometimes|required|string|max:255',
+                'first_last_name' => 'sometimes|required|string|max:255',
+                'second_last_name' => 'sometimes|required|string|max:255',
                 'birth_date' => 'sometimes|required|date',
                 'curp' => 'sometimes|required|string|max:18|unique:users,curp,' . $id,
                 'rfc' => 'sometimes|required|string|max:13|unique:users,rfc,' . $id,
@@ -264,8 +269,8 @@ class UsersController extends Controller
             ], [
                 'name.required' => 'El nombre es obligatorio.',
                 'name.max' => 'El nombre no puede superar los 255 caracteres.',
-                'last_name.required' => 'El apellido es obligatorio.',
-                'last_name.max' => 'El apellido no puede superar los 255 caracteres.',
+                'first_last_name.required' => 'El apellido es obligatorio.',
+                'second_last_name.max' => 'El apellido no puede superar los 255 caracteres.',
                 'birth_date.required' => 'La fecha de nacimiento es obligatoria.',
                 'birth_date.date' => 'La fecha de nacimiento no es válida.',
                 'curp.required' => 'La CURP es obligatoria.',
@@ -293,7 +298,8 @@ class UsersController extends Controller
 
             $data = $request->only([
                 'name',
-                'last_name',
+                'first_last_name',
+                'second_last_name',
                 'birth_date',
                 'curp',
                 'rfc',

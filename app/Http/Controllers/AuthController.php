@@ -18,7 +18,8 @@ class AuthController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'nullable|string|max:255',
-                'last_name' => 'nullable|string|max:255',
+                'first_last_name' => 'nullable|string|max:255',
+                'second_last_name' => 'nullable|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:8|confirmed',
                 'phone' => 'required|string|max:20',
@@ -31,7 +32,8 @@ class AuthController extends Controller
                 'domicilio_fiscal' => 'nullable|string|max:255',
             ], [
                 'name.max' => 'El nombre no puede tener más de 255 caracteres.',
-                'last_name.max' => 'El apellido no puede tener más de 255 caracteres.',
+                'first_last_name.max' => 'El apellido no puede tener más de 255 caracteres.',
+                'second_last_name.max' => 'El apellido no puede tener más de 255 caracteres.',
                 'email.required' => 'El correo electrónico es obligatorio.',
                 'email.email' => 'El correo electrónico debe ser una dirección válida.',
                 'email.unique' => 'Este correo electrónico ya está registrado.',
@@ -182,7 +184,8 @@ class AuthController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'name' => 'nullable|string|max:255',
-                'last_name' => 'nullable|string|max:255',
+                'first_last_name' => 'nullable|string|max:255',
+                'second_last_name' => 'nullable|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
                 'phone' => 'required|string|max:20',
                 'type_person' => 'required|integer|in:4,5',
@@ -213,7 +216,8 @@ class AuthController extends Controller
 
             $user->update($request->only([
                 'name',
-                'last_name',
+                'first_last_name',
+                'second_last_name',
                 'email',
                 'phone',
                 'type_person',

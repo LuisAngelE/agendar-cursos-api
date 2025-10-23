@@ -96,7 +96,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return response()->json([
         'id' => $user->id,
         'name' => $user->name,
-        'last_name' => $user->last_name,
+        'first_last_name' => $user->first_last_name,
+        'second_last_name' => $user->second_last_name,
         'email' => $user->email,
         'type_user' => $user->type_user,
         'phone' => $user->phone_number,

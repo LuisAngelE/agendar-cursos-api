@@ -19,7 +19,8 @@ class UserSeeder extends Seeder
             [
                 'id' => 520,
                 'name' => 'Abraham',
-                'last_name' => 'Hernandez Fernandez',
+                'first_last_name' => 'Hernandez',
+                'second_last_name' => 'Fernandez',
                 'email' => 'abraham.hernandez@ldrsolutions.com.mx',
                 'type_user' => 1,
                 'type_person' => 4,
@@ -38,7 +39,8 @@ class UserSeeder extends Seeder
             [
                 'id' => 547,
                 'name' => 'Pedro',
-                'last_name' => 'Leyva Ojeda',
+                'first_last_name' => 'Leyva',
+                'second_last_name' => 'Ojeda',
                 'email' => 'pedro.leyva@ldrsolutions.com.mx',
                 'type_user' => 2,
                 'type_person' => 4,
@@ -57,7 +59,8 @@ class UserSeeder extends Seeder
             [
                 'id' => 676,
                 'name' => 'David',
-                'last_name' => 'Bernal Bernal',
+                'first_last_name' => 'Bernal',
+                'second_last_name' => 'Bernal',
                 'email' => 'david.bernal@ldrsolutions.com.mx',
                 'type_user' => 2,
                 'type_person' => 4,
@@ -76,7 +79,8 @@ class UserSeeder extends Seeder
             [
                 'id' => 1,
                 'name' => null,
-                'last_name' => null,
+                'first_last_name' => null,
+                'second_last_name' => null,
                 'email' => 'luis.espinoza@ldrsolutions.com.mx',
                 'type_user' => 1,
                 'type_person' => 5,
@@ -95,7 +99,8 @@ class UserSeeder extends Seeder
             [
                 'id' => 2,
                 'name' => 'Luis Angel',
-                'last_name' => 'Espinoza Mauro',
+                'first_last_name' => 'Espinoza',
+                'second_last_name' => 'Mauro',
                 'email' => 'luisangelem.dp@gmail.com',
                 'type_user' => 3,
                 'type_person' => 4,
@@ -114,7 +119,8 @@ class UserSeeder extends Seeder
             [
                 'id' => 3,
                 'name' => 'Javier',
-                'last_name' => 'Rodriguez Murrieta',
+                'first_last_name' => 'Rodriguez',
+                'second_last_name' => 'Murrieta',
                 'email' => 'javier.rodriguez@ldrsolutions.com.mx',
                 'type_user' => 6,
                 'type_person' => 4,

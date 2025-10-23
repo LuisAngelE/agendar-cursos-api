@@ -28,7 +28,7 @@
                                 style="font-size:20px; margin:0 0 15px 0; color:#333; font-weight:normal; line-height:1.4;">
                                 Buen día estimado(a): <br>
                                 <span style="color:#F05E29; font-weight:bold;">
-                                    {{ $schedule->course->user->razon_social ?? $schedule->course->user->name . ' ' . $schedule->course->user->last_name }}
+                                    {{ $schedule->course->user->razon_social ?? $schedule->course->user->name . ' ' . $schedule->course->user->first_last_name . ' ' . $schedule->course->user->second_last_name }}
                                 </span>
                             </h2>
 
@@ -60,7 +60,7 @@
                                 </tr>
                                 <tr>
                                     <td style="padding:5px 0;"><strong>Solicitante:</strong></td>
-                                    <td>{{ $reservation->student->razon_social ?? $reservation->student->name . ' ' . $reservation->student->last_name }}
+                                    <td>{{ $reservation->student->razon_social ?? $reservation->student->name . ' ' . $reservation->student->first_last_name . ' ' . $reservation->student->second_last_name }}
                                     </td>
                                 </tr>
                                 <tr>

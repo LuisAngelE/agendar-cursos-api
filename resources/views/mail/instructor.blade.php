@@ -28,7 +28,12 @@
                                 style="font-size:20px; margin:0 0 15px 0; color:#333; font-weight:normal; line-height:1.4;">
                                 Hola <span
                                     style="color:#F05E29; font-weight:bold;">{{ $schedule->instructor?->razon_social ??
-                                        ($schedule->instructor?->name . ' ' . $schedule->instructor?->last_name ?? 'Instructor no definido') }}</span>,
+                                        ($schedule->instructor?->name .
+                                            ' ' .
+                                            $schedule->instructor?->first_last_name .
+                                            ' ' .
+                                            $schedule->instructor?->second_last_name ??
+                                            'Instructor no definido') }}</span>,
                             </h2>
 
                             <p style="font-size:15px; line-height:1.6; margin:0 0 15px 0;">
@@ -59,13 +64,18 @@
                                 </tr>
                                 <tr>
                                     <td style="padding:5px 0;"><strong>Solicitante:</strong></td>
-                                    <td>{{ $reservation->student->razon_social ?? $reservation->student->name . ' ' . $reservation->student->last_name }}
+                                    <td>{{ $reservation->student->razon_social ?? $reservation->student->name . ' ' . $reservation->student->first_last_name . ' ' . $reservation->student->second_last_name }}
                                 </tr>
                                 <tr>
                                     <td style="padding:5px 0;"><strong>Instructor:</strong></td>
                                     <td>
                                         {{ $schedule->instructor?->razon_social ??
-                                            ($schedule->instructor?->name . ' ' . $schedule->instructor?->last_name ?? 'Instructor no definido') }}
+                                            ($schedule->instructor?->name .
+                                                ' ' .
+                                                $schedule->instructor?->first_last_name .
+                                                ' ' .
+                                                $schedule->instructor?->second_last_name ??
+                                                'Instructor no definido') }}
                                     </td>
                                 </tr>
                                 <tr>
