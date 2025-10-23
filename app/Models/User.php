@@ -19,6 +19,8 @@ class User extends Authenticatable
     const Fisica = 4;
     const Moral = 5;
 
+    const SubAdmin = 6;
+
     protected $fillable = [
         'name',
         'last_name',

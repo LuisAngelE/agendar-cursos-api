@@ -111,6 +111,25 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
                 'password' => Hash::make('password'),
             ],
+            [
+                'id' => 3,
+                'name' => 'Javier',
+                'last_name' => 'Rodriguez Murrieta',
+                'email' => 'javier.rodriguez@ldrsolutions.com.mx',
+                'type_user' => 6,
+                'type_person' => 4,
+                'phone' => '3316026901',
+                'collaborator_number' => '240374',
+                'birth_date' => '1964-05-06',
+                'curp' => 'ROMJ640506HPLDRV02',
+                'rfc' => 'ROMJ640506DA3',
+                'razon_social' => null,
+                'representante_legal' => null,
+                'domicilio_fiscal' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+                'password' => Hash::make('password'),
+            ],
         ]);
     }
 }
