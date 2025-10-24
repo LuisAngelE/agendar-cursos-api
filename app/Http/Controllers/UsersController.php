@@ -74,7 +74,7 @@ class UsersController extends Controller
                 'rfc' => 'required|string|max:13|unique:users,rfc',
                 'email' => 'required|string|email|max:255|unique:users,email',
                 'phone' => 'required|string|max:20',
-                'type_user' => 'required|integer|in:1,2,3',
+                'type_user' => 'required|integer',
                 'password' => 'required|string|min:8|confirmed',
                 'collaborator_number' => 'nullable|string|max:10',
             ], [
@@ -150,7 +150,7 @@ class UsersController extends Controller
                 'domicilio_fiscal'    => 'required|string|max:255',
                 'email'               => 'required|string|email|max:255|unique:users,email',
                 'phone'               => 'required|string|max:20',
-                'type_user'           => 'required|integer|in:1,2,3',
+                'type_user'           => 'required|integer',
                 'password'            => 'required|string|min:8|confirmed',
                 'collaborator_number' => 'nullable|string|max:10',
             ], [
@@ -263,7 +263,7 @@ class UsersController extends Controller
                 'rfc' => 'sometimes|required|string|max:13|unique:users,rfc,' . $id,
                 'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $id,
                 'phone' => 'sometimes|required|string|max:20',
-                'type_user' => 'sometimes|required|integer|in:1,2,3',
+                'type_user' => 'sometimes|required|integer',
                 'password' => 'nullable|string|min:8|confirmed',
                 'collaborator_number' => 'nullable|string|max:10',
             ], [
@@ -372,7 +372,7 @@ class UsersController extends Controller
                 'domicilio_fiscal'    => 'sometimes|required|string|max:255',
                 'email'               => 'sometimes|required|string|email|max:255|unique:users,email,' . $id,
                 'phone'               => 'sometimes|required|string|max:20',
-                'type_user'           => 'sometimes|required|integer|in:1,2,3',
+                'type_user'           => 'sometimes|required|integer',
                 'password'            => 'nullable|string|min:8|confirmed',
                 'collaborator_number' => 'nullable|string|max:10',
             ], [
