@@ -75,7 +75,7 @@ class UsersController extends Controller
                 'email' => 'required|string|email|max:255|unique:users,email',
                 'phone' => 'required|string|max:20',
                 'type_user' => 'required|integer',
-                'password' => 'required|string|min:8|confirmed',
+                'password' => 'required|string|min:4|confirmed',
                 'collaborator_number' => 'nullable|string|max:10',
             ], [
                 'name.required' => 'El nombre es obligatorio.',
@@ -101,7 +101,7 @@ class UsersController extends Controller
                 'type_user.required' => 'El tipo de usuario es obligatorio.',
                 'type_user.in' => 'El tipo de usuario seleccionado no es válido.',
                 'password.required' => 'La contraseña es obligatoria.',
-                'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+                'password.min' => 'La contraseña debe tener al menos 4 caracteres.',
                 'password.confirmed' => 'La confirmación de la contraseña no coincide.',
                 'collaborator_number.max' => 'El número de colaborador no puede superar los 10 caracteres.',
             ]);
@@ -151,7 +151,7 @@ class UsersController extends Controller
                 'email'               => 'required|string|email|max:255|unique:users,email',
                 'phone'               => 'required|string|max:20',
                 'type_user'           => 'required|integer',
-                'password'            => 'required|string|min:8|confirmed',
+                'password'            => 'required|string|min:4|confirmed',
                 'collaborator_number' => 'nullable|string|max:10',
             ], [
                 'razon_social.required' => 'La razón social es obligatoria.',
@@ -264,7 +264,7 @@ class UsersController extends Controller
                 'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $id,
                 'phone' => 'sometimes|required|string|max:20',
                 'type_user' => 'sometimes|required|integer',
-                'password' => 'nullable|string|min:8|confirmed',
+                'password' => 'nullable|string|min:4|confirmed',
                 'collaborator_number' => 'nullable|string|max:10',
             ], [
                 'name.required' => 'El nombre es obligatorio.',
@@ -373,7 +373,7 @@ class UsersController extends Controller
                 'email'               => 'sometimes|required|string|email|max:255|unique:users,email,' . $id,
                 'phone'               => 'sometimes|required|string|max:20',
                 'type_user'           => 'sometimes|required|integer',
-                'password'            => 'nullable|string|min:8|confirmed',
+                'password'            => 'nullable|string|min:4|confirmed',
                 'collaborator_number' => 'nullable|string|max:10',
             ], [
                 'razon_social.required' => 'La razón social es obligatoria.',

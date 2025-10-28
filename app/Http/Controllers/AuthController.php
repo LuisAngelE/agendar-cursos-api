@@ -21,7 +21,7 @@ class AuthController extends Controller
                 'first_last_name' => 'nullable|string|max:255',
                 'second_last_name' => 'nullable|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:8|confirmed',
+                'password' => 'required|string|min:4|confirmed',
                 'phone' => 'required|string|max:20',
                 'type_person' => 'required|integer|in:4,5',
                 'birth_date' => 'nullable|date',
@@ -38,7 +38,7 @@ class AuthController extends Controller
                 'email.email' => 'El correo electrónico debe ser una dirección válida.',
                 'email.unique' => 'Este correo electrónico ya está registrado.',
                 'password.required' => 'La contraseña es obligatoria.',
-                'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+                'password.min' => 'La contraseña debe tener al menos 4 caracteres.',
                 'password.confirmed' => 'La confirmación de la contraseña no coincide.',
                 'phone.required' => 'El teléfono es obligatorio.',
                 'phone.max' => 'El teléfono no puede tener más de 20 caracteres.',
@@ -143,11 +143,11 @@ class AuthController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'current_password' => 'required|string',
-                'password' => 'required|string|min:8|confirmed',
+                'password' => 'required|string|min:4|confirmed',
             ], [
                 'current_password.required' => 'La contraseña actual es obligatoria.',
                 'password.required' => 'La nueva contraseña es obligatoria.',
-                'password.min' => 'La nueva contraseña debe tener al menos 8 caracteres.',
+                'password.min' => 'La nueva contraseña debe tener al menos 4 caracteres.',
                 'password.confirmed' => 'La confirmación de la contraseña no coincide.',
             ]);
 
