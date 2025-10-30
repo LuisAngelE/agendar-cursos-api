@@ -18,16 +18,6 @@ Route::post('/forgotPassword', [AuthController::class, 'forgotPassword']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/users/fisicas', [UsersController::class, 'indexFisicas']);
-Route::post('/store/fisicas', [UsersController::class, 'storeFisica']);
-Route::post('/update/fisicas/{id}', [UsersController::class, 'updateFisica']);
-
-Route::get('/users/clients', [UsersController::class, 'indexClients']);
-Route::get('/users/morales', [UsersController::class, 'indexMorales']);
-Route::post('/store/morales', [UsersController::class, 'storeMorales']);
-Route::post('/update/morales/{id}', [UsersController::class, 'updateMorales']);
-
-Route::get('/instructores', [UsersController::class, 'instructores']);
 Route::resource('/users', UsersController::class);
 
 Route::get('/coursePublic', [CourseController::class, 'index']);
@@ -38,14 +28,29 @@ Route::get('/course-schedules/dates/{userId}', [EventsScheduleController::class,
 Route::post('/storeDemo', [EventsScheduleController::class, 'storeDemo']);
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get('/users/clients/{user_id}', [UsersController::class, 'indexClients']);
+    Route::get('/instructores/{user_id}', [UsersController::class, 'instructores']);
+
+    Route::get('/users/fisicas/{user_id}', [UsersController::class, 'indexFisicas']);
+    Route::post('/store/fisicas', [UsersController::class, 'storeFisica']);
+    Route::post('/update/fisicas/{id}', [UsersController::class, 'updateFisica']);
+
+    Route::get('/users/morales/{user_id}', [UsersController::class, 'indexMorales']);
+    Route::post('/store/morales', [UsersController::class, 'storeMorales']);
+    Route::post('/update/morales/{id}', [UsersController::class, 'updateMorales']);
+
     //Categorías
+    Route::get('/categories/user/{user_id}', [CategoriesController::class, 'indexByUser']);
     Route::resource('/categories', CategoriesController::class);
 
     //Modelos
+    Route::get('/models/user/{user_id}', [ModelsController::class, 'indexByUser']);
     Route::resource('/modelos', ModelsController::class);
 
     //Cursos
     Route::resource('/course', CourseController::class);
+    Route::get('/courses/user/{user_id}', [CourseController::class, 'indexByUser']);
     Route::get('/indexTypeUserCourse/{id}', [CourseController::class, 'indexTypeUserCourse']);
     Route::post('/courses/{id}/images', [ImageCourseController::class, 'courseImageUpload']);
     Route::delete('/courses/{courseId}/images/{imageId}', [ImageCourseController::class, 'deleteCourseImage']);
@@ -55,8 +60,9 @@ Route::middleware('auth:sanctum')->group(function () {
     //Agendación Fecha
     Route::post('/courses/{courseId}/assign-instructor', [EventsScheduleController::class, 'assignInstructor']);
     Route::get('/indexTypeUserAgenda/{id}', [EventsScheduleController::class, 'indexTypeUserAgenda']);
+    Route::get('/courseSchedule/TypeUser/{id}', [EventsScheduleController::class, 'index']);
     Route::post('/courseSchedule/{id}/edit', [EventsScheduleController::class, 'update']);
-    Route::get('/indexCount', [EventsScheduleController::class, 'indexCount']);
+    Route::get('/indexCount/{id}', [EventsScheduleController::class, 'indexCount']);
     Route::get('/indexTypeUserAgendaCount/{id}', [EventsScheduleController::class, 'indexTypeUserAgendaCount']);
     Route::post('/storeByAdmin', [EventsScheduleController::class, 'storeByAdmin']);
     Route::resource('/courseSchedule', EventsScheduleController::class);

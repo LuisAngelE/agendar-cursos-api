@@ -15,7 +15,7 @@ use Carbon\Carbon;
 
 class EventsScheduleController extends Controller
 {
-    public function index()
+    public function index($user_id)
     {
         try {
             $query = EventsSchedule::with([
@@ -25,7 +25,7 @@ class EventsScheduleController extends Controller
                 'reservations.student',
                 'state',
                 'municipality'
-            ]);
+            ])->where('user_id', $user_id);
 
             $schedule = $query->get();
 
@@ -38,10 +38,12 @@ class EventsScheduleController extends Controller
         }
     }
 
-    public function indexCount()
+    public function indexCount($user_id)
     {
         try {
-            $schedule = EventsSchedule::select('id')->where('event_type', 'curso')
+            $schedule = EventsSchedule::select('id')
+                ->where('event_type', 'curso')
+                ->where('user_id', $user_id)
                 ->get();
 
             return response()->json($schedule, 200);
@@ -379,6 +381,7 @@ class EventsScheduleController extends Controller
                 [
                     'event_type'   => 'curso',
                     'reference_id' => $validated['course_id'],
+                    'user_id' => auth()->id(),
                 ]
             ));
 

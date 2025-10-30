@@ -20,6 +20,7 @@ class EventsSchedule extends Model
         'location',
         'state_id',
         'municipality_id',
+        'user_id',
     ];
 
     protected $dates = ['deleted_at'];
@@ -54,5 +55,10 @@ class EventsSchedule extends Model
     public function municipality()
     {
         return $this->belongsTo(Municipality::class, 'municipality_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

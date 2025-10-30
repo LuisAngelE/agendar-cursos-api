@@ -20,9 +20,17 @@ class UsersController extends Controller
         ], 200);
     }
 
-    public function indexFisicas()
+    public function indexFisicas($user_id)
     {
-        $fisicas = User::where('type_person', 4)->get();
+        $fisicas = User::where('type_person', 4)
+            ->where(function ($query) use ($user_id) {
+                $query->where('user_id', $user_id)
+                    ->orWhere(function ($q) {
+                        $q->whereNull('user_id')
+                            ->where('type_user', User::SubAdmin);
+                    });
+            })
+            ->get();
 
         return response()->json([
             'success' => true,
@@ -30,9 +38,17 @@ class UsersController extends Controller
         ], 200);
     }
 
-    public function indexMorales()
+    public function indexMorales($user_id)
     {
-        $morales = User::where('type_person', 5)->get();
+        $morales = User::where('type_person', 5)
+            ->where(function ($query) use ($user_id) {
+                $query->where('user_id', $user_id)
+                    ->orWhere(function ($q) {
+                        $q->whereNull('user_id')
+                            ->where('type_user', User::SubAdmin);
+                    });
+            })
+            ->get();
 
         return response()->json([
             'success' => true,
@@ -40,9 +56,9 @@ class UsersController extends Controller
         ], 200);
     }
 
-    public function indexClients()
+    public function indexClients($user_id)
     {
-        $fisicas = User::where('type_user', 3)->get();
+        $fisicas = User::where('type_user', 3)->where('user_id', $user_id)->get();
 
         return response()->json([
             'success' => true,
@@ -50,10 +66,11 @@ class UsersController extends Controller
         ], 200);
     }
 
-    public function instructores()
+    public function instructores($user_id)
     {
-        $instructores = User::whereIn('type_user', [1, 2])
-            ->where('type_person', 4)
+        $instructores = User::where('type_person', User::Fisica)
+            ->whereIn('type_user', [User::Admin, User::Instructor])
+            ->where('user_id', $user_id)
             ->get();
 
         return response()->json([
@@ -126,6 +143,8 @@ class UsersController extends Controller
             $data['password'] = Hash::make($request->password);
             $data['type_person'] = User::Fisica;
 
+            $data['user_id'] = auth()->id();
+
             $user = User::create($data);
 
             return response()->json([
@@ -194,6 +213,8 @@ class UsersController extends Controller
 
             $data['password'] = Hash::make($request->password);
             $data['type_person'] = User::Moral;
+
+            $data['user_id'] = auth()->id();
 
             $user = User::create($data);
 

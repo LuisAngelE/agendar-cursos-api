@@ -17,6 +17,7 @@ class CreateModelsTable extends Migration
             $table->id();
             $table->string('nombre_segmento');
             $table->string('nombre_tipo_unidad');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -21,6 +21,20 @@ class ModelsController extends Controller
         }
     }
 
+    public function indexByUser($user_id)
+    {
+        try {
+            $models = Models::where('user_id', $user_id)->get();
+
+            return response()->json($models, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al obtener los modelos del usuario',
+                'mensaje' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function show($id)
     {
         try {
@@ -44,6 +58,8 @@ class ModelsController extends Controller
                 'nombre_tipo_unidad.required' => 'El nombre del segmento es obligatorio',
                 'nombre_modelo.required' => 'El nombre de tipo unidad es obligatorio',
             ]);
+
+            $validated['user_id'] = auth()->id();
 
             $model = Models::create($validated);
 

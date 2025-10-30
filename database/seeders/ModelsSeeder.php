@@ -15,31 +15,31 @@ class ModelsSeeder extends Seeder
     public function run()
     {
         $models = [
-            ['nombre_segmento' => 'Heavy Duty Truck', 'nombre_tipo_unidad' => 'S35'],
-            ['nombre_segmento' => 'Heavy Duty Truck', 'nombre_tipo_unidad' => 'GTL'],
-            ['nombre_segmento' => 'Heavy Duty Truck', 'nombre_tipo_unidad' => 'S40'],
-            ['nombre_segmento' => 'Heavy Duty Truck', 'nombre_tipo_unidad' => 'EST-A'],
-            ['nombre_segmento' => 'Heavy Duty Truck', 'nombre_tipo_unidad' => 'Galaxy'],
-            ['nombre_segmento' => 'Heavy Duty Truck', 'nombre_tipo_unidad' => 'EST'],
+            ['nombre_segmento' => 'Heavy Duty Truck', 'nombre_tipo_unidad' => 'S35', 'user_id' => 520],
+            ['nombre_segmento' => 'Heavy Duty Truck', 'nombre_tipo_unidad' => 'GTL', 'user_id' => 520],
+            ['nombre_segmento' => 'Heavy Duty Truck', 'nombre_tipo_unidad' => 'S40', 'user_id' => 520],
+            ['nombre_segmento' => 'Heavy Duty Truck', 'nombre_tipo_unidad' => 'EST-A', 'user_id' => 520],
+            ['nombre_segmento' => 'Heavy Duty Truck', 'nombre_tipo_unidad' => 'Galaxy', 'user_id' => 520],
+            ['nombre_segmento' => 'Heavy Duty Truck', 'nombre_tipo_unidad' => 'EST', 'user_id' => 520],
 
-            ['nombre_segmento' => 'Light Duty Truck (LDT)', 'nombre_tipo_unidad' => 'Miler'],
-            ['nombre_segmento' => 'Light Duty Truck (LDT)', 'nombre_tipo_unidad' => 'S3'],
-            ['nombre_segmento' => 'Light Duty Truck (LDT)', 'nombre_tipo_unidad' => 'S4'],
-            ['nombre_segmento' => 'Light Duty Truck (LDT)', 'nombre_tipo_unidad' => 'S5'],
-            ['nombre_segmento' => 'Light Duty Truck (LDT)', 'nombre_tipo_unidad' => 'S6'],
+            ['nombre_segmento' => 'Light Duty Truck (LDT)', 'nombre_tipo_unidad' => 'Miler', 'user_id' => 520],
+            ['nombre_segmento' => 'Light Duty Truck (LDT)', 'nombre_tipo_unidad' => 'S3', 'user_id' => 520],
+            ['nombre_segmento' => 'Light Duty Truck (LDT)', 'nombre_tipo_unidad' => 'S4', 'user_id' => 520],
+            ['nombre_segmento' => 'Light Duty Truck (LDT)', 'nombre_tipo_unidad' => 'S5', 'user_id' => 520],
+            ['nombre_segmento' => 'Light Duty Truck (LDT)', 'nombre_tipo_unidad' => 'S6', 'user_id' => 520],
 
-            ['nombre_segmento' => 'Medium Duty Truck (MDT)', 'nombre_tipo_unidad' => 'S8'],
-            ['nombre_segmento' => 'Medium Duty Truck (MDT)', 'nombre_tipo_unidad' => 'S12'],
-            ['nombre_segmento' => 'Medium Duty Truck (MDT)', 'nombre_tipo_unidad' => 'S13'],
-            ['nombre_segmento' => 'Medium Duty Truck (MDT)', 'nombre_tipo_unidad' => 'S20'],
+            ['nombre_segmento' => 'Medium Duty Truck (MDT)', 'nombre_tipo_unidad' => 'S8', 'user_id' => 520],
+            ['nombre_segmento' => 'Medium Duty Truck (MDT)', 'nombre_tipo_unidad' => 'S12', 'user_id' => 520],
+            ['nombre_segmento' => 'Medium Duty Truck (MDT)', 'nombre_tipo_unidad' => 'S13', 'user_id' => 520],
+            ['nombre_segmento' => 'Medium Duty Truck (MDT)', 'nombre_tipo_unidad' => 'S20', 'user_id' => 520],
 
-            ['nombre_segmento' => 'Mini Truck', 'nombre_tipo_unidad' => 'Wonder'],
-            ['nombre_segmento' => 'Mini Truck', 'nombre_tipo_unidad' => 'TM3'],
+            ['nombre_segmento' => 'Mini Truck', 'nombre_tipo_unidad' => 'Wonder', 'user_id' => 520],
+            ['nombre_segmento' => 'Mini Truck', 'nombre_tipo_unidad' => 'TM3', 'user_id' => 520],
 
-            ['nombre_segmento' => 'Passengers', 'nombre_tipo_unidad' => 'VIEW'],
-            ['nombre_segmento' => 'Passengers', 'nombre_tipo_unidad' => 'Grand VIEW'],
-            ['nombre_segmento' => 'Passengers', 'nombre_tipo_unidad' => 'HiVan'],
-            ['nombre_segmento' => 'Passengers', 'nombre_tipo_unidad' => 'Tunland'],
+            ['nombre_segmento' => 'Passengers', 'nombre_tipo_unidad' => 'VIEW', 'user_id' => 520],
+            ['nombre_segmento' => 'Passengers', 'nombre_tipo_unidad' => 'Grand VIEW', 'user_id' => 520],
+            ['nombre_segmento' => 'Passengers', 'nombre_tipo_unidad' => 'HiVan', 'user_id' => 520],
+            ['nombre_segmento' => 'Passengers', 'nombre_tipo_unidad' => 'Tunland', 'user_id' => 520],
         ];
 
         DB::table('models')->insert($models);

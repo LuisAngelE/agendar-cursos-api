@@ -41,6 +41,42 @@ class CourseController extends Controller
         }
     }
 
+    public function indexByUser(Request $request, $user_id)
+    {
+        try {
+            $query = Course::with('category', 'models', 'user', 'schedules', 'schedules.state', 'schedules.municipality', 'reservations', 'usersWhoFavorited', 'images')
+                ->where('user_id', $user_id);
+
+            if ($request->has('nombre') && !empty($request->nombre)) {
+                $search = $request->nombre;
+                $query->where('title', 'LIKE', "%{$search}%");
+            }
+
+            if ($request->has('category_id') && !empty($request->category_id)) {
+                $query->where('category_id', $request->category_id);
+            }
+
+            if ($request->has('model_id') && !empty($request->model_id)) {
+                $query->where('model_id', $request->model_id);
+            }
+
+            $courses = $query->get();
+
+            $courses = $courses->map(function ($course) {
+                $course->image = $course->images->first();
+                unset($course->images);
+                return $course;
+            });
+
+            return response()->json($courses, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al obtener los cursos',
+                'mensaje' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     // Listar cursos asociados a un instructor
     public function indexTypeUserCourse(Request $request, $id)
     {

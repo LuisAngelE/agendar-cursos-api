@@ -37,6 +37,7 @@ class User extends Authenticatable
         'razon_social',
         'representante_legal',
         'domicilio_fiscal',
+        'user_id',
     ];
 
     protected $dates = ['deleted_at'];
@@ -75,5 +76,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Course::class, 'courses_users_favorites', 'user_id', 'course_id')
             ->withTimestamps();
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

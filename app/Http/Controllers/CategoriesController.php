@@ -18,6 +18,20 @@ class CategoriesController extends Controller
         }
     }
 
+    public function indexByUser($user_id)
+    {
+        try {
+            $models = categories::where('user_id', $user_id)->get();
+
+            return response()->json($models, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al obtener las categorías del usuario',
+                'mensaje' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function show($id)
     {
         try {
@@ -39,6 +53,8 @@ class CategoriesController extends Controller
                 'name.max' => 'El nombre no puede tener más de 255 caracteres',
                 'name.unique' => 'El nombre ya existe',
             ]);
+
+            $validated['user_id'] = auth()->id();
 
             $category = categories::create($validated);
 
