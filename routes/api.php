@@ -18,18 +18,17 @@ Route::post('/forgotPassword', [AuthController::class, 'forgotPassword']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::resource('/users', UsersController::class);
-
+Route::get('/users', [UsersController::class, 'index']);
 Route::get('/coursePublic', [CourseController::class, 'index']);
 
 //Endpoind Fechas en Events
 Route::get('/course-schedules/dates', [EventsScheduleController::class, 'getDates']);
+Route::get('/course-schedules/dates/admin/{userId}', [EventsScheduleController::class, 'getDatesAdmin']);
 Route::get('/course-schedules/dates/{userId}', [EventsScheduleController::class, 'getDatesTypeUser']);
 Route::post('/storeDemo', [EventsScheduleController::class, 'storeDemo']);
 
 Route::middleware('auth:sanctum')->group(function () {
-
-    Route::get('/users/clients/{user_id}', [UsersController::class, 'indexClients']);
+    Route::get('/users/students', [UsersController::class, 'indexStudents']);
     Route::get('/instructores/{user_id}', [UsersController::class, 'instructores']);
 
     Route::get('/users/fisicas/{user_id}', [UsersController::class, 'indexFisicas']);

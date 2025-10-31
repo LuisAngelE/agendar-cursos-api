@@ -150,6 +150,63 @@ class EventsScheduleController extends Controller
         return response()->json($dates);
     }
 
+    public function getDatesAdmin($user_id)
+    {
+        $dates = EventsSchedule::with([
+            'instructor',
+            'course',
+            'reservations.student',
+            'state',
+            'municipality'
+        ])
+            ->select(
+                'id',
+                'instructor_id',
+                'course_id',
+                'event_type',
+                'reference_id',
+                'start_date',
+                'end_date',
+                'state_id',
+                'municipality_id'
+            )
+            ->orderBy('start_date', 'asc')
+            ->where('user_id', $user_id)
+            ->get()
+            ->map(function ($schedule) {
+                $firstReservation = $schedule->reservations->first();
+
+                return [
+                    'id' => $schedule->id,
+                    'event_type' => $schedule->event_type,
+                    'reference_id' => $schedule->reference_id,
+                    'start_date' => $schedule->start_date,
+                    'end_date' => $schedule->end_date,
+
+                    'instructor_id' => $schedule->instructor_id,
+                    'instructor_name' => $schedule->instructor?->name,
+                    'instructor_first_last_name' => $schedule->instructor?->first_last_name,
+                    'instructor_second_last_name' => $schedule->instructor?->second_last_name,
+                    'collaborator_number' => $schedule->instructor?->collaborator_number,
+
+                    'course_title' => $schedule->course?->title,
+
+                    'client_id' => $firstReservation?->student_id,
+                    'client_name' => $firstReservation?->student?->name,
+                    'client_first_last_name' => $firstReservation?->student?->first_last_name,
+                    'client_second_last_name' => $firstReservation?->student?->second_last_name,
+                    'client_razon_social' => $firstReservation?->student?->razon_social,
+                    'client_phone' => $firstReservation?->student?->phone,
+                    'course_status' => $firstReservation?->status,
+
+                    'state_name' => $schedule->state?->name,
+                    'municipality_name' => $schedule->municipality?->name,
+                ];
+            });
+
+        return response()->json($dates);
+    }
+
     public function getDatesTypeUser($id)
     {
         $dates = EventsSchedule::with([
@@ -231,6 +288,7 @@ class EventsScheduleController extends Controller
         try {
             $validated = $request->validate([
                 'course_id'       => 'required|exists:courses,id',
+                'user_id'         => 'required|exists:users,id',
                 'state_id'        => 'required|exists:states,id',
                 'municipality_id' => 'required|exists:municipalities,id',
                 'start_date'      => 'required|date_format:Y-m-d H:i:s',
@@ -238,6 +296,8 @@ class EventsScheduleController extends Controller
             ], [
                 'course_id.required'       => 'El ID del curso es obligatorio.',
                 'course_id.exists'         => 'El curso seleccionado no existe.',
+                'user_id.required'         => 'El ID del admin es obligatorio.',
+                'user_id.exists'           => 'El admin seleccionado no existe.',
                 'state_id.required'        => 'El estado es obligatorio.',
                 'state_id.exists'          => 'El estado seleccionado no existe.',
                 'municipality_id.required' => 'El municipio es obligatorio.',
@@ -283,6 +343,7 @@ class EventsScheduleController extends Controller
                 [
                     'event_type'   => 'curso',
                     'reference_id' => $validated['course_id'],
+                    'user_id' => $validated['user_id'],
                 ]
             ));
 

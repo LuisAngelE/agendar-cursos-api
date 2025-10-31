@@ -56,9 +56,9 @@ class UsersController extends Controller
         ], 200);
     }
 
-    public function indexClients($user_id)
+    public function indexStudents()
     {
-        $fisicas = User::where('type_user', 3)->where('user_id', $user_id)->get();
+        $fisicas = User::where('type_user', 3)->get();
 
         return response()->json([
             'success' => true,
