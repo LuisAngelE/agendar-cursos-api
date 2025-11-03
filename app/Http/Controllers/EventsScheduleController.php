@@ -18,16 +18,19 @@ class EventsScheduleController extends Controller
     public function index($user_id)
     {
         try {
-            $query = EventsSchedule::with([
+            $schedule = EventsSchedule::with([
                 'course',
                 'instructor',
                 'reservations',
                 'reservations.student',
                 'state',
-                'municipality'
-            ])->where('user_id', $user_id);
-
-            $schedule = $query->get();
+                'municipality',
+                'admins'
+            ])
+                ->whereHas('admins', function ($q) use ($user_id) {
+                    $q->where('users.id', $user_id);
+                })
+                ->get();
 
             return response()->json($schedule, 200);
         } catch (\Exception $e) {
@@ -43,7 +46,9 @@ class EventsScheduleController extends Controller
         try {
             $schedule = EventsSchedule::select('id')
                 ->where('event_type', 'curso')
-                ->where('user_id', $user_id)
+                ->whereHas('admins', function ($q) use ($user_id) {
+                    $q->where('users.id', $user_id);
+                })
                 ->get();
 
             return response()->json($schedule, 200);
@@ -288,7 +293,8 @@ class EventsScheduleController extends Controller
         try {
             $validated = $request->validate([
                 'course_id'       => 'required|exists:courses,id',
-                'user_id'         => 'required|exists:users,id',
+                'user_ids'        => 'required|array|min:1',
+                'user_ids.*'      => 'exists:users,id',
                 'state_id'        => 'required|exists:states,id',
                 'municipality_id' => 'required|exists:municipalities,id',
                 'start_date'      => 'required|date_format:Y-m-d H:i:s',
@@ -296,8 +302,10 @@ class EventsScheduleController extends Controller
             ], [
                 'course_id.required'       => 'El ID del curso es obligatorio.',
                 'course_id.exists'         => 'El curso seleccionado no existe.',
-                'user_id.required'         => 'El ID del admin es obligatorio.',
-                'user_id.exists'           => 'El admin seleccionado no existe.',
+                'user_ids.required'        => 'Los IDs de los admins son obligatorios.',
+                'user_ids.array'           => 'Los IDs de los admins deben ser un arreglo.',
+                'user_ids.min'             => 'Debe proporcionar al menos un ID de admin.',
+                'user_ids.*.exists'        => 'Uno o más IDs de admins no existen.',
                 'state_id.required'        => 'El estado es obligatorio.',
                 'state_id.exists'          => 'El estado seleccionado no existe.',
                 'municipality_id.required' => 'El municipio es obligatorio.',
@@ -312,7 +320,7 @@ class EventsScheduleController extends Controller
             $date = Carbon::parse($validated['start_date']);
             $now  = Carbon::now();
 
-            $existingSchedulesCount  = EventsSchedule::where('course_id', $validated['course_id'])
+            $existingSchedulesCount = EventsSchedule::where('course_id', $validated['course_id'])
                 ->whereDate('start_date', $date->toDateString())
                 ->count();
 
@@ -330,22 +338,24 @@ class EventsScheduleController extends Controller
                 ], 422);
             }
 
-            $oneHourLater = $now->copy()->addHour();
-            if ($date->lt($oneHourLater)) {
+            if ($date->lt($now->copy()->addHour())) {
                 return response()->json([
                     'success' => false,
                     'error' => 'No puedes agendar dentro de la próxima hora.'
                 ], 422);
             }
 
-            $schedule = EventsSchedule::create(array_merge(
-                $validated,
-                [
-                    'event_type'   => 'curso',
-                    'reference_id' => $validated['course_id'],
-                    'user_id' => $validated['user_id'],
-                ]
-            ));
+            $schedule = EventsSchedule::create([
+                'course_id'       => $validated['course_id'],
+                'event_type'      => 'curso',
+                'reference_id'    => $validated['course_id'],
+                'state_id'        => $validated['state_id'],
+                'municipality_id' => $validated['municipality_id'],
+                'start_date'      => $validated['start_date'],
+                'location'        => $validated['location'],
+            ]);
+
+            $schedule->admins()->attach($validated['user_ids']);
 
             $reservation = Reservation::create([
                 'student_id'  => Auth::id(),
@@ -355,7 +365,6 @@ class EventsScheduleController extends Controller
             ]);
 
             $url = getBaseUrl();
-
             $courseOwner = $schedule->course->user;
             if ($courseOwner && $courseOwner->email) {
                 Mail::to($courseOwner->email)->send(new NuevoHorario($schedule, $reservation, $url));
@@ -364,7 +373,7 @@ class EventsScheduleController extends Controller
             return response()->json([
                 'success'     => true,
                 'mensaje'     => 'Horario y reserva creados correctamente.',
-                'schedule'    => $schedule,
+                'schedule'    => $schedule->load('admins'),
                 'reservation' => $reservation->load(['student', 'course', 'schedule']),
             ], 201);
         } catch (ValidationException $e) {
@@ -440,11 +449,17 @@ class EventsScheduleController extends Controller
             $schedule = EventsSchedule::create(array_merge(
                 $validated,
                 [
-                    'event_type'   => 'curso',
-                    'reference_id' => $validated['course_id'],
-                    'user_id' => auth()->id(),
+                    'course_id'       => $validated['course_id'],
+                    'event_type'      => 'curso',
+                    'reference_id'    => $validated['course_id'],
+                    'state_id'        => $validated['state_id'],
+                    'municipality_id' => $validated['municipality_id'],
+                    'start_date'      => $validated['start_date'],
+                    'location'        => $validated['location'],
                 ]
             ));
+
+            $schedule->admins()->attach(auth()->id());
 
             $reservation = Reservation::create([
                 'course_id'   => $validated['course_id'],

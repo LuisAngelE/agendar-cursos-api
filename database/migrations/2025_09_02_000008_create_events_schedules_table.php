@@ -26,9 +26,7 @@ class CreateEventsSchedulesTable extends Migration
             $table->string('location')->nullable();
             $table->foreignId('state_id')->nullable()->constrained('states')->onDelete('cascade');
             $table->foreignId('municipality_id')->nullable()->constrained('municipalities');
-
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
-
+            
             $table->timestamps();
             $table->softDeletes();
         });

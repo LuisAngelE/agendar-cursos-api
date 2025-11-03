@@ -82,4 +82,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function eventSchedules()
+    {
+        return $this->belongsToMany(EventsSchedule::class, 'event_schedule_user', 'user_id', 'events_schedule_id')
+            ->withTimestamps();
+    }
 }
