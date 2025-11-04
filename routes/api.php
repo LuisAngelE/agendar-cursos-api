@@ -19,6 +19,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/users', [UsersController::class, 'index']);
+Route::delete('/users/{id}', [UsersController::class, 'destroy']);
+Route::get('/usersShow/{id}', [UsersController::class, 'show']);
 Route::get('/coursePublic', [CourseController::class, 'index']);
 
 //Endpoind Fechas en Events
@@ -31,11 +33,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/students', [UsersController::class, 'indexStudents']);
     Route::get('/instructores/{user_id}', [UsersController::class, 'instructores']);
 
-    Route::get('/users/fisicas/{user_id}', [UsersController::class, 'indexFisicas']);
+    Route::get('/users/fisicas', [UsersController::class, 'indexFisicas']);
     Route::post('/store/fisicas', [UsersController::class, 'storeFisica']);
     Route::post('/update/fisicas/{id}', [UsersController::class, 'updateFisica']);
 
-    Route::get('/users/morales/{user_id}', [UsersController::class, 'indexMorales']);
+    Route::get('/users/morales', [UsersController::class, 'indexMorales']);
     Route::post('/store/morales', [UsersController::class, 'storeMorales']);
     Route::post('/update/morales/{id}', [UsersController::class, 'updateMorales']);
 

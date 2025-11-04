@@ -37,6 +37,7 @@ class User extends Authenticatable
         'razon_social',
         'representante_legal',
         'domicilio_fiscal',
+        'user_id',
     ];
 
     protected $dates = ['deleted_at'];
@@ -80,20 +81,6 @@ class User extends Authenticatable
     public function eventSchedules()
     {
         return $this->belongsToMany(EventsSchedule::class, 'event_schedule_user', 'user_id', 'events_schedule_id')
-            ->withTimestamps();
-    }
-
-    // Un admin puede tener muchos clientes
-    public function clients()
-    {
-        return $this->belongsToMany(User::class, 'admin_user', 'admin_id', 'client_id')
-            ->withTimestamps();
-    }
-
-    // Un cliente puede tener muchos admins
-    public function admins()
-    {
-        return $this->belongsToMany(User::class, 'admin_user', 'client_id', 'admin_id')
             ->withTimestamps();
     }
 }

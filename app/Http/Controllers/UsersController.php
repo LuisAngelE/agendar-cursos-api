@@ -20,16 +20,10 @@ class UsersController extends Controller
         ], 200);
     }
 
-    public function indexFisicas($user_id)
+    public function indexFisicas()
     {
         $fisicas = User::where('type_person', 4)
-            ->where(function ($query) use ($user_id) {
-                $query->where('user_id', $user_id)
-                    ->orWhere(function ($q) {
-                        $q->whereNull('user_id')
-                            ->where('type_user', User::SubAdmin);
-                    });
-            })
+
             ->get();
 
         return response()->json([
@@ -38,16 +32,9 @@ class UsersController extends Controller
         ], 200);
     }
 
-    public function indexMorales($user_id)
+    public function indexMorales()
     {
         $morales = User::where('type_person', 5)
-            ->where(function ($query) use ($user_id) {
-                $query->where('user_id', $user_id)
-                    ->orWhere(function ($q) {
-                        $q->whereNull('user_id')
-                            ->where('type_user', User::SubAdmin);
-                    });
-            })
             ->get();
 
         return response()->json([
