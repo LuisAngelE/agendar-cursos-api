@@ -41,6 +41,53 @@ class EventsScheduleController extends Controller
         }
     }
 
+    public function Allindex(Request $request)
+    {
+        try {
+            $query = EventsSchedule::with([
+                'course',
+                'course.models',
+                'instructor',
+                'reservations',
+                'reservations.student',
+                'state',
+                'municipality',
+                'admins'
+            ])
+                ->where('event_type', 'curso');
+
+            if ($request->has('nombre') && !empty($request->nombre)) {
+                $search = $request->nombre;
+                $query->whereHas('course', function ($q) use ($search) {
+                    $q->where('title', 'LIKE', "%{$search}%");
+                });
+            }
+
+            if ($request->has('category_id') && !empty($request->category_id)) {
+                $category_id = $request->category_id;
+                $query->whereHas('course', function ($q) use ($category_id) {
+                    $q->where('category_id', $category_id);
+                });
+            }
+
+            if ($request->has('model_id') && !empty($request->model_id)) {
+                $model_id = $request->model_id;
+                $query->whereHas('course', function ($q) use ($model_id) {
+                    $q->where('model_id', $model_id);
+                });
+            }
+
+            $schedule = $query->get();
+
+            return response()->json($schedule, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al obtener los cursos',
+                'mensaje' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function indexCount($user_id)
     {
         try {
@@ -176,7 +223,9 @@ class EventsScheduleController extends Controller
                 'municipality_id'
             )
             ->orderBy('start_date', 'asc')
-            ->where('user_id', $user_id)
+            ->whereHas('admins', function ($q) use ($user_id) {
+                $q->where('users.id', $user_id);
+            })
             ->get()
             ->map(function ($schedule) {
                 $firstReservation = $schedule->reservations->first();

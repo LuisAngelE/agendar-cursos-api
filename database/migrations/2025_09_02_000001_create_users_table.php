@@ -33,8 +33,6 @@ return new class extends Migration
             $table->string('representante_legal')->nullable();
             $table->string('domicilio_fiscal')->nullable();
 
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
-
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

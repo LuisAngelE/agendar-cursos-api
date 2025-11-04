@@ -60,6 +60,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/courses/{courseId}/assign-instructor', [EventsScheduleController::class, 'assignInstructor']);
     Route::get('/indexTypeUserAgenda/{id}', [EventsScheduleController::class, 'indexTypeUserAgenda']);
     Route::get('/courseSchedule/TypeUser/{id}', [EventsScheduleController::class, 'index']);
+    Route::get('/courseSchedule/Allindex', [EventsScheduleController::class, 'Allindex']);
     Route::post('/courseSchedule/{id}/edit', [EventsScheduleController::class, 'update']);
     Route::get('/indexCount/{id}', [EventsScheduleController::class, 'indexCount']);
     Route::get('/indexTypeUserAgendaCount/{id}', [EventsScheduleController::class, 'indexTypeUserAgendaCount']);
