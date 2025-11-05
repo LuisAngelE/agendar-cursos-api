@@ -21,6 +21,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/users', [UsersController::class, 'index']);
 Route::delete('/users/{id}', [UsersController::class, 'destroy']);
 Route::get('/usersShow/{id}', [UsersController::class, 'show']);
+
 Route::get('/coursePublic', [CourseController::class, 'index']);
 
 //Endpoind Fechas en Events
@@ -30,38 +31,57 @@ Route::get('/course-schedules/dates/{userId}', [EventsScheduleController::class,
 Route::post('/storeDemo', [EventsScheduleController::class, 'storeDemo']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    //Get para todos los clientes
     Route::get('/users/students', [UsersController::class, 'indexStudents']);
+    //Get para instructores por administrador
     Route::get('/instructores/{user_id}', [UsersController::class, 'instructores']);
 
+    //Usuarios Físicas
     Route::get('/users/fisicas', [UsersController::class, 'indexFisicas']);
+    //Alta de usuarios físicas
     Route::post('/store/fisicas', [UsersController::class, 'storeFisica']);
+    //Actualización de usuarios físicas
     Route::post('/update/fisicas/{id}', [UsersController::class, 'updateFisica']);
 
+    //Usuarios Morales
     Route::get('/users/morales', [UsersController::class, 'indexMorales']);
+    //Alta de usuarios morales
     Route::post('/store/morales', [UsersController::class, 'storeMorales']);
+    //Actualización de usuarios morales
     Route::post('/update/morales/{id}', [UsersController::class, 'updateMorales']);
 
-    //Categorías
+    //Categorías por administrador
     Route::get('/categories/user/{user_id}', [CategoriesController::class, 'indexByUser']);
+    //Categorías resource
     Route::resource('/categories', CategoriesController::class);
 
-    //Modelos
+    //Modelos por administrador
     Route::get('/models/user/{user_id}', [ModelsController::class, 'indexByUser']);
+    //Modelos resource
     Route::resource('/modelos', ModelsController::class);
 
-    //Cursos
+    //Cursos resource
     Route::resource('/course', CourseController::class);
+    //Cursos por administrador
     Route::get('/courses/user/{user_id}', [CourseController::class, 'indexByUser']);
+    //Cursos por instructor asignado
     Route::get('/indexTypeUserCourse/{id}', [CourseController::class, 'indexTypeUserCourse']);
-    Route::post('/courses/{id}/images', [ImageCourseController::class, 'courseImageUpload']);
-    Route::delete('/courses/{courseId}/images/{imageId}', [ImageCourseController::class, 'deleteCourseImage']);
+    //Habilitar un curso
     Route::put('/courses/{id}/enable', [CourseController::class, 'enable']);
+    //Deshabilitar un curso
     Route::put('/courses/{id}/disable', [CourseController::class, 'disable']);
+        //Subir imagenes de curso
+    Route::post('/courses/{id}/images', [ImageCourseController::class, 'courseImageUpload']);
+    //Eliminar imagenes de curso
+    Route::delete('/courses/{courseId}/images/{imageId}', [ImageCourseController::class, 'deleteCourseImage']);
 
-    //Agendación Fecha
+    //Asignar instructor a curso
     Route::post('/courses/{courseId}/assign-instructor', [EventsScheduleController::class, 'assignInstructor']);
+    //Reservaciones por instructor y cliente
     Route::get('/indexTypeUserAgenda/{id}', [EventsScheduleController::class, 'indexTypeUserAgenda']);
+    //Reservaciones por administrador
     Route::get('/courseSchedule/TypeUser/{id}', [EventsScheduleController::class, 'index']);
+    //Todas las reservaciones
     Route::get('/courseSchedule/Allindex', [EventsScheduleController::class, 'Allindex']);
     Route::post('/courseSchedule/{id}/edit', [EventsScheduleController::class, 'update']);
     Route::get('/indexCount/{id}', [EventsScheduleController::class, 'indexCount']);
