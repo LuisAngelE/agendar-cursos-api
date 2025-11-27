@@ -22,8 +22,8 @@ return new class extends Migration
             $table->unsignedTinyInteger('type_user')->nullable()->default(3);
             $table->unsignedTinyInteger('type_person')->nullable()->default(4);
 
-            $table->string('phone', 20);
-            $table->string('collaborator_number', 10)->nullable();
+            $table->string('phone')->nullable();
+            $table->string('collaborator_number')->nullable();
 
             $table->date('birth_date')->nullable();
             $table->string('curp', 18)->nullable();
