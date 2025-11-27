@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/forgotPassword', [AuthController::class, 'forgotPassword']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login/{collaborator_number}', [AuthController::class, 'loginByNumber']);
 
 Route::get('/users', [UsersController::class, 'index']);
 Route::delete('/users/{id}', [UsersController::class, 'destroy']);
@@ -34,7 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //Get para todos los clientes
     Route::get('/users/students', [UsersController::class, 'indexStudents']);
     //Get para instructores por administrador
-    Route::get('/instructores/{user_id}', [UsersController::class, 'instructores']);
+    Route::get('/instructores', [UsersController::class, 'instructores']);
 
     //Usuarios Físicas
     Route::get('/users/fisicas', [UsersController::class, 'indexFisicas']);
@@ -70,7 +71,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/courses/{id}/enable', [CourseController::class, 'enable']);
     //Deshabilitar un curso
     Route::put('/courses/{id}/disable', [CourseController::class, 'disable']);
-        //Subir imagenes de curso
+    //Subir imagenes de curso
     Route::post('/courses/{id}/images', [ImageCourseController::class, 'courseImageUpload']);
     //Eliminar imagenes de curso
     Route::delete('/courses/{courseId}/images/{imageId}', [ImageCourseController::class, 'deleteCourseImage']);

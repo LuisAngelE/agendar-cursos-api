@@ -53,11 +53,10 @@ class UsersController extends Controller
         ], 200);
     }
 
-    public function instructores($user_id)
+    public function instructores()
     {
         $instructores = User::where('type_person', User::Fisica)
             ->whereIn('type_user', [User::Admin, User::Instructor])
-            ->where('user_id', $user_id)
             ->get();
 
         return response()->json([

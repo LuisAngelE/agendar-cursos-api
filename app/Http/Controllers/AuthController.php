@@ -115,6 +115,32 @@ class AuthController extends Controller
         }
     }
 
+    public function loginByNumber($collaborator_number)
+    {
+        try {
+            $user = User::where('collaborator_number', $collaborator_number)->first();
+
+            if (!$user) {
+                return response()->json([
+                    'error' => 'Empleado no encontrado.'
+                ], 404);
+            }
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'message' => 'Autenticación exitosa',
+                'user' => $user,
+                'token' => $token
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error al autenticar empleado',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function me(Request $request)
     {
         try {
