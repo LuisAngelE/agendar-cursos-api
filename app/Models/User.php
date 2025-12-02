@@ -20,6 +20,7 @@ class User extends Authenticatable
     const Moral = 5;
 
     const SubAdmin = 6;
+    const Corporativo = 7;
 
     protected $fillable = [
         'name',

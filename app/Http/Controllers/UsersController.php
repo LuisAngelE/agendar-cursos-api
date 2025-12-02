@@ -22,8 +22,8 @@ class UsersController extends Controller
 
     public function indexFisicas()
     {
-        $fisicas = User::where('type_person', 4)
-
+        $fisicas = User::where('type_person', User::Fisica)
+            ->where('type_user', '!=', User::Corporativo)
             ->get();
 
         return response()->json([

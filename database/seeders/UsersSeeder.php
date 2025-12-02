@@ -25,8 +25,7 @@ class UsersSeeder extends Seeder
 
             User::create([
                 'id'                   => $record['id_colaborador'] ?? null,
-                'first_name'           => $record['nombre_1'] ?? null,
-                'middle_name'          => $record['nombre_2'] ?: null,
+                'name'                 => trim(($record['nombre_1'] ?? '') . ' ' . ($record['nombre_2'] ?? '')),
                 'first_last_name'      => $record['apellido_paterno'] ?? null,
                 'second_last_name'     => $record['apellido_materno'] ?? null,
                 'email'                => $record['email_corporativo'] !== 'SIN ASIGNAR'

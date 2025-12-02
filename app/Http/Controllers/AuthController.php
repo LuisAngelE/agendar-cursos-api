@@ -19,8 +19,7 @@ class AuthController extends Controller
             $validator = Validator::make(
                 $request->all(),
                 [
-                    'first_name' => 'nullable|string|max:255',
-                    'middle_name' => 'nullable|string|max:255',
+                    'name' => 'nullable|string|max:255',
                     'first_last_name' => 'nullable|string|max:255',
                     'second_last_name' => 'nullable|string|max:255',
                     'email' => 'required|string|email|max:255|unique:users',
@@ -36,8 +35,7 @@ class AuthController extends Controller
                     'domicilio_fiscal' => 'nullable|string|max:255',
                 ],
                 [
-                    'first_name.max' => 'El nombre no puede tener más de 255 caracteres.',
-                    'middle_name.max' => 'El segundo nombre no puede tener más de 255 caracteres.',
+                    'name.max' => 'El nombre no puede tener más de 255 caracteres.',
                     'first_last_name.max' => 'El primer apellido no puede tener más de 255 caracteres.',
                     'second_last_name.max' => 'El segundo apellido no puede tener más de 255 caracteres.',
                     'email.required' => 'El correo electrónico es obligatorio.',
