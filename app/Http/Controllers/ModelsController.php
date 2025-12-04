@@ -52,7 +52,7 @@ class ModelsController extends Controller
     {
         try {
             $validated = $request->validate([
-                'nombre_segmento' => 'required|string|max:255',
+                'nombre_segmento' => 'nullable|string|max:255',
                 'nombre_tipo_unidad' => 'required|string|max:255',
             ], [
                 'nombre_tipo_unidad.required' => 'El nombre del segmento es obligatorio',
@@ -93,7 +93,7 @@ class ModelsController extends Controller
             }
 
             $validated = $request->validate([
-                'nombre_segmento' => 'required|string|max:255',
+                'nombre_segmento' => 'nullable|string|max:255',
                 'nombre_tipo_unidad' => 'required|string|max:255',
             ], [
                 'nombre_tipo_unidad.required' => 'El nombre del segmento es obligatorio',
