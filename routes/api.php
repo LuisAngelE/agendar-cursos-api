@@ -115,7 +115,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/countCategories', [GraphicsController::class, 'countCategories']);
     Route::get('/countCourse', [GraphicsController::class, 'countCourse']);
     Route::get('/countReservation', [GraphicsController::class, 'countReservation']);
-    Route::get('/countUser', [GraphicsController::class, 'countUser']);
+    Route::get('/countModels', [GraphicsController::class, 'countModels']);
 });
 
 //Usuario autenticado

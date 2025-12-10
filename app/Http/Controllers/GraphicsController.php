@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\categories;
 use App\Models\Course;
+use App\Models\Models;
 use App\Models\Reservation;
 use App\Models\User;
 
@@ -41,9 +42,9 @@ class GraphicsController extends Controller
         ], 200);
     }
 
-    public function countUser()
+    public function countModels()
     {
-        $count = User::count();
+        $count = Models::count();
 
         return response()->json([
             'success' => true,
