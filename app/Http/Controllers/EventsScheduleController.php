@@ -480,12 +480,12 @@ class EventsScheduleController extends Controller
                 ], 422);
             }
 
-            if ($date->lt($now)) {
-                return response()->json([
-                    'success' => false,
-                    'error' => 'No puedes agendar en una fecha u hora pasada.'
-                ], 422);
-            }
+            // if ($date->lt($now)) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'error' => 'No puedes agendar en una fecha u hora pasada.'
+            //     ], 422);
+            // }
 
             $oneHourLater = $now->copy()->addHour();
             if ($date->lt($oneHourLater)) {
