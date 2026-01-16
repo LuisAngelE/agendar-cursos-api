@@ -487,13 +487,13 @@ class EventsScheduleController extends Controller
             //     ], 422);
             // }
 
-            $oneHourLater = $now->copy()->addHour();
-            if ($date->lt($oneHourLater)) {
-                return response()->json([
-                    'success' => false,
-                    'error' => 'No puedes agendar dentro de la próxima hora.'
-                ], 422);
-            }
+            // $oneHourLater = $now->copy()->addHour();
+            // if ($date->lt($oneHourLater)) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'error' => 'No puedes agendar dentro de la próxima hora.'
+            //     ], 422);
+            // }
 
             $schedule = EventsSchedule::create(array_merge(
                 $validated,
