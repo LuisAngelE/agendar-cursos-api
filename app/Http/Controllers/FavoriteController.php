@@ -14,7 +14,7 @@ class FavoriteController extends Controller
             $user = $request->user();
 
             $favorites = $user->favoriteCourses()
-                ->with('user', 'category', 'images', 'schedules', 'reservations', 'usersWhoFavorited')
+                ->with('user', 'category', 'images', 'schedules', 'reservations', 'usersWhoFavorited', 'models')
                 ->get()
                 ->map(function ($course) {
                     $course->image = $course->images->first();
