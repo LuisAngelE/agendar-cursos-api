@@ -389,13 +389,12 @@ class AuthController extends Controller
                     'first_last_name' => 'required|string|max:255',
                     'second_last_name' => 'required|string|max:255',
                     'email' => 'required|string|email|max:255|unique:users',
-                    'phone' => 'required|string|max:20',
+                    'phone' => 'nullable|string|max:20',
                     'collaborator_number' => 'required|string|max:20',
                     'birth_date' => 'required|date',
                     'curp' => 'required|string|max:18|unique:users,curp,',
                     'rfc' => 'required|string|max:13|unique:users,rfc,',
-                    'position' => 'required|string|max:255',
-                    'url' => 'required|string|max:255'
+                    'position' => 'required|string|max:255'
                 ],
                 [
                     'name.required' => 'El nombre es obligatorio.',
@@ -404,7 +403,6 @@ class AuthController extends Controller
                     'email.required' => 'El correo electrónico es obligatorio.',
                     'email.email' => 'El correo electrónico debe ser una dirección válida.',
                     'email.max' => 'El correo electrónico no puede tener más de 255 caracteres.',
-                    'phone.required' => 'El teléfono es obligatorio.',
                     'phone.max' => 'El teléfono no puede tener más de 20 caracteres.',
                     'collaborator_number.required' => 'El número de colaborador es obligatorio.',
                     'collaborator_number.max' => 'El número de colaborador no puede tener más de 20 caracteres.',
@@ -414,7 +412,6 @@ class AuthController extends Controller
                     'rfc.required' => 'El RFC es obligatorio.',
                     'rfc.max' => 'El RFC no puede tener más de 13 caracteres.',
                     'position.required' => 'El puesto es obligatorio.',
-                    'url.required' => 'La URL es obligatoria.',
                 ]
             );
 
@@ -426,6 +423,7 @@ class AuthController extends Controller
             $data['password'] = Hash::make('password');
             $data['type_user'] = User::Corporativo;
             $data['type_person'] = User::Fisica;
+            $data['url'] = $request->collaborator_number . '_f';
 
             $user = User::create($data);
 

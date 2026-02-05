@@ -488,4 +488,51 @@ class UsersController extends Controller
             ], 500);
         }
     }
+
+    public function deleteCollaborator(string $collaborator_number)
+    {
+        try {
+            $user = User::with(['courses', 'reservations', 'favoriteCourses'])->where('collaborator_number', $collaborator_number)->firstOrFail();
+
+            if (!$user) {
+                return response()->json(['error' => 'Usuario no encontrado'], 404);
+            }
+
+            if ($user->courses()->exists()) {
+                return response()->json([
+                    'error' => 'No se puede eliminar este usuario porque tiene cursos asignados.'
+                ], 400);
+            }
+
+            if ($user->reservations()->exists()) {
+                return response()->json([
+                    'error' => 'No se puede eliminar este usuario porque tiene reservas activas.'
+                ], 400);
+            }
+
+            if ($user->favoriteCourses()->exists()) {
+                return response()->json([
+                    'error' => 'No se puede eliminar este usuario porque tiene cursos marcados como favoritos.'
+                ], 400);
+            }
+
+            $isInstructor = EventsSchedule::where('instructor_id', $user->id)->exists();
+            if ($isInstructor) {
+                return response()->json([
+                    'error' => 'No se puede eliminar este usuario porque está asignado como instructor en uno o más horarios.'
+                ], 400);
+            }
+
+            $user->delete();
+
+            return response()->json([
+                'message' => 'Usuario eliminado exitosamente',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Eliminación fallida',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

@@ -22,6 +22,7 @@ Route::post('/login/{collaborator_number}', [AuthController::class, 'loginByNumb
 
 Route::get('/users', [UsersController::class, 'index']);
 Route::delete('/users/{id}', [UsersController::class, 'destroy']);
+Route::delete('/deleteCollaborator/{collaborator_number}', [UsersController::class, 'deleteCollaborator']);
 Route::get('/usersShow/{id}', [UsersController::class, 'show']);
 
 Route::get('/coursePublic', [CourseController::class, 'index']);
