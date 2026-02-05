@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/forgotPassword', [AuthController::class, 'forgotPassword']);
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/registerColaborator', [AuthController::class, 'registerColaborator']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/login/{collaborator_number}', [AuthController::class, 'loginByNumber']);
 

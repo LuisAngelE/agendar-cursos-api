@@ -39,6 +39,8 @@ class User extends Authenticatable
         'representante_legal',
         'domicilio_fiscal',
         'user_id',
+        'position',
+        'url',
     ];
 
     protected $dates = ['deleted_at'];

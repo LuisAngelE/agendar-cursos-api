@@ -378,4 +378,69 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
+    public function registerColaborator(Request $request)
+    {
+        try {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'name' => 'required|string|max:255',
+                    'first_last_name' => 'required|string|max:255',
+                    'second_last_name' => 'required|string|max:255',
+                    'email' => 'required|string|email|max:255|unique:users',
+                    'phone' => 'required|string|max:20',
+                    'collaborator_number' => 'required|string|max:20',
+                    'birth_date' => 'required|date',
+                    'curp' => 'required|string|max:18|unique:users,curp,',
+                    'rfc' => 'required|string|max:13|unique:users,rfc,',
+                    'position' => 'required|string|max:255',
+                    'url' => 'required|string|max:255'
+                ],
+                [
+                    'name.required' => 'El nombre es obligatorio.',
+                    'first_last_name.required' => 'El primer apellido es obligatorio.',
+                    'second_last_name.required' => 'El segundo apellido es obligatorio.',
+                    'email.required' => 'El correo electrónico es obligatorio.',
+                    'email.email' => 'El correo electrónico debe ser una dirección válida.',
+                    'email.max' => 'El correo electrónico no puede tener más de 255 caracteres.',
+                    'phone.required' => 'El teléfono es obligatorio.',
+                    'phone.max' => 'El teléfono no puede tener más de 20 caracteres.',
+                    'collaborator_number.required' => 'El número de colaborador es obligatorio.',
+                    'collaborator_number.max' => 'El número de colaborador no puede tener más de 20 caracteres.',
+                    'birth_date.required' => 'La fecha de nacimiento es obligatoria.',
+                    'curp.required' => 'La CURP es obligatoria.',
+                    'curp.max' => 'La CURP no puede tener más de 18 caracteres.',
+                    'rfc.required' => 'El RFC es obligatorio.',
+                    'rfc.max' => 'El RFC no puede tener más de 13 caracteres.',
+                    'position.required' => 'El puesto es obligatorio.',
+                    'url.required' => 'La URL es obligatoria.',
+                ]
+            );
+
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+
+            $data = $request->all();
+            $data['password'] = Hash::make('password');
+            $data['type_user'] = User::Corporativo;
+            $data['type_person'] = User::Fisica;
+
+            $user = User::create($data);
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'message' => 'Usuario registrado exitosamente',
+                'user' => $user,
+                'token' => $token
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Registro fallido',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
